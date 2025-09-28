@@ -131,13 +131,15 @@ function loadProducts() {
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <img src="${item.ImageURL}" alt="${item.Name}">
-          <div class="card-content">
-            <h3>${item.Name}</h3>
-            <p>${item.Description}</p>
-            <p class="price">₹${item.Price}</p>
-            <button class="btn" onclick="addToCart('${item.Name}', ${item.Price})">Add to Cart</button>
-          </div>
+  <img src="${item.image_url}" alt="${item.name}">
+  <div class="card-content">
+    <h3>${item.name}</h3>
+    <p>${item.description}</p>
+    <p class="price">₹${item.price}</p>
+    <button class="btn" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+  </div>
+`;
+
         `;
         container.appendChild(card);
       });
