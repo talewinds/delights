@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweets & Snacks Made to Order</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #fffaf4; color: #333;
+    }
+    header {
+      background: maroon; color: white;
+      padding: 15px; text-align: center;
+    }
+    header h1 { margin: 0; }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px; padding: 20px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card img {
+      width: 100%; height: 150px; object-fit: cover;
+    }
+    .card-content { padding: 10px; }
+    .card h3 { margin: 5px 0; color: maroon; }
+    .price { font-weight: bold; margin: 5px 0; }
+    .btn {
+      background: maroon; color: white;
+      border: none; padding: 8px 12px;
+      margin-top: 8px;
+      cursor: pointer;
+      border-radius: 4px;
+      width: 100%;
+    }
+    .btn:hover { background: #a00000; }
+    #cart {
+      padding: 20px;
+    }
+    #cart h2 { color: maroon; }
+    .cart-item {
+      display: flex; justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+    #checkout {
+      padding: 20px;
+    }
+    #checkout h2 { color: maroon; }
+    label { display: block; margin-top: 10px; }
+    input, textarea {
+      width: 100%; padding: 8px; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 4px;
+    }
+    .share {
+      margin: 20px; text-align: center;
+    }
+    .share button {
+      margin: 5px; padding: 10px 15px;
+      border: none; border-radius: 5px;
+      cursor: pointer; color: white;
+    }
+    .wa { background: #25D366; }
+    .fb { background: #4267B2; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Homemade Sweets & Snacks</h1>
+  <p>Made fresh on order – Taste of Tradition 🍬</p>
+</header>
+
+<section id="products" class="products"></section>
+
+<section id="cart">
+  <h2>🛒 Your Cart</h2>
+  <div id="cart-items"></div>
+  <p><strong>Total:</strong> ₹<span id="cart-total">0</span></p>
+</section>
+
+<section id="checkout">
+  <h2>Checkout</h2>
+  <form id="checkout-form">
+    <label>Name <input type="text" id="cust-name" required></label>
+    <label>Phone <input type="text" id="cust-phone" required></label>
+    <label>Delivery Date <input type="date" id="cust-date" required></label>
+    <label>Address <textarea id="cust-address"></textarea></label>
+    <p><strong>Pay Advance via GPay:</strong><br>
+    UPI ID: <span id="upi-id"></span></p>
+    <button type="submit" class="btn">Confirm Order</button>
+  </form>
+</section>
+
+<div class="share">
+  <p>Share this menu:</p>
+  <button class="wa" onclick="shareWA()">WhatsApp</button>
+  <button class="fb" onclick="shareFB()">Facebook</button>
+</div>
+
+<script>
+const CONFIG = {
+  OWNER_PHONE: "918281566744", // your WhatsApp number without +
+  UPI_ID: "yourupi@bank", // replace with your UPI
+  SHEET_PRODUCTS_URL: "https://script.google.com/macros/s/AKfycbzgbmCR9lFsr2-fH3X7ECo0xVVkKJY0NI_dlHaR_W1foygUo66yHWwp8al0Tg2TrDGqPw/exec",
+  ORDER_LOG_URL: "" // optional, if you make order log script
+};
+
+document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
+
+let cart = [];
+
+function loadProducts() {
+  fetch(CONFIG.SHEET_PRODUCTS_URL)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${item.ImageURL}" alt="${item.Name}">
+          <div class="card-content">
+            <h3>${item.Name}</h3>
+            <p>${item.Description}</p>
+            <p class="price">₹${item.Price}</p>
+            <button class="btn" onclick="addToCart('${item.Name}', ${item.Price})">Add to Cart</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    });
+}
+
+function addToCart(name, price) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({name, price, qty:1});
+  }
+  renderCart();
+}
+
+function renderCart() {
+  const container = document.getElementById("cart-items");
+  container.innerHTML = "";
+  let total = 0;
+  cart.forEach((item, idx) => {
+    total += item.price * item.qty;
+    container.innerHTML += `
+      <div class="cart-item">
+        <span>${item.name} x ${item.qty}</span>
+        <span>₹${item.price*item.qty}</span>
+      </div>
+    `;
+  });
+  document.getElementById("cart-total").innerText = total;
+}
+
+document.getElementById("checkout-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = document.getElementById("cust-name").value;
+  const phone = document.getElementById("cust-phone").value;
+  const date = document.getElementById("cust-date").value;
+  const address = document.getElementById("cust-address").value;
+  const total = document.getElementById("cart-total").innerText;
+
+  const orderMsg = `Order Confirmation
+Name: ${name}
+Phone: ${phone}
+Delivery Date: ${date}
+Address: ${address}
+Items: ${cart.map(i=>i.name+' x'+i.qty).join(', ')}
+Total: ₹${total}
+Payment: Paid advance via GPay (${CONFIG.UPI_ID})`;
+
+  const waLink = `https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(orderMsg)}`;
+  window.open(waLink, "_blank");
+
+  // Optionally log order in Google Sheets via POST
+  if (CONFIG.ORDER_LOG_URL) {
+    fetch(CONFIG.ORDER_LOG_URL, {
+      method: "POST",
+      body: JSON.stringify({name, phone, date, address, cart, total}),
+      headers: {"Content-Type":"application/json"}
+    });
+  }
+
+  alert("Order sent via WhatsApp!");
+  cart = [];
+  renderCart();
+  e.target.reset();
+});
+
+function shareWA() {
+  const link = location.href;
+  window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${link}`, "_blank");
+}
+
+function shareFB() {
+  const link = location.href;
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, "_blank");
+}
+
+loadProducts();
+</script>
+</body>
+</html>
