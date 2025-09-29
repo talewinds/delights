@@ -56,6 +56,7 @@
   .close:hover { color:black; }
   #qr-code { text-align:center; margin:15px 0; }
   #receipt { background:#fffafa; padding:10px; border:1px solid #ddd; border-radius:6px; }
+  #upi-link { display:block; text-align:center; margin:10px 0; color:white; background:maroon; padding:8px; border-radius:4px; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -121,6 +122,8 @@
     <h3>Pay via UPI / QR Code</h3>
     <div id="qr-code"></div>
     <p>Total Amount: ₹<span id="payment-amount"></span></p>
+    <a id="upi-link" href="" target="_blank">Pay via GPay</a>
+    <p style="text-align:center;">Or pay manually using UPI ID: <strong id="upi-text"></strong></p>
     <button class="btn" onclick="generateReceipt()">I've Paid</button>
   </div>
 </div>
@@ -144,6 +147,8 @@ const CONFIG = {
 };
 
 document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
+document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
+
 let cart = [];
 
 // Load products from Google Sheet
@@ -272,11 +277,12 @@ function proceedPayment(){
   const total=document.getElementById("cart-total").innerText;
   document.getElementById("payment-amount").innerText=total;
 
-  // Generate UPI QR code
   const upiString=`upi://pay?pa=${CONFIG.UPI_ID}&pn=Delights&am=${total}&cu=INR`;
   QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
     if (error) console.error(error);
   });
+
+  document.getElementById("upi-link").href=`https://pay.google.com/upi/pay?pa=${CONFIG.UPI_ID}&pn=Delights&am=${total}&cu=INR`;
 
   openModal('payment-modal');
 }
@@ -297,12 +303,11 @@ function generateReceipt(){
   receiptHTML+=`<p><strong>Items:</strong><br>`;
   cart.forEach(i=>{ receiptHTML+=`${i.name} x ${i.qty} @ ₹${i.price} = ₹${i.qty*i.price}<br>`; });
   receiptHTML+=`</p><p><strong>Total Paid:</strong> ₹${total}</p>`;
-  receiptHTML+=`<p>Paid via GPay/UPI (QR)</p>`;
+  receiptHTML+=`<p>Paid via GPay/UPI (QR or link)</p>`;
 
   document.getElementById("receipt").innerHTML=receiptHTML;
   openModal('receipt-modal');
 
-  // Clear cart
   cart=[]; renderCart(); updateCartBadge();
   document.getElementById("checkout-form").reset();
 }
@@ -322,8 +327,8 @@ function closeModal(id){ document.getElementById(id).style.display="none"; }
 function shareWA(){ window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${location.href}`,"_blank"); }
 function shareFB(){ window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`,"_blank"); }
 
-// Proceed to Confirmation button in cart
-document.getElementById("proceed-confirm").addEventListener("click", ()=>{
+// Proceed to Confirmation Button
+document.getElementById("proceed-confirm").addEventListener("click",()=>{
   document.getElementById("checkout").scrollIntoView({behavior:"smooth"});
 });
 
