@@ -65,13 +65,16 @@
   .card-content { padding: 10px; }
   .card h3 { margin: 5px 0; color: maroon; }
   .price { font-weight: bold; margin: 5px 0; }
+  .qty-input {
+    width: 60px; padding: 5px;
+    margin-right: 5px; text-align: center;
+  }
   .btn {
     background: maroon; color: white;
     border: none; padding: 8px 12px;
     margin-top: 8px;
     cursor: pointer;
     border-radius: 4px;
-    width: 100%;
   }
   .btn:hover { background: #a00000; }
 
@@ -100,25 +103,24 @@
   .wa { background: #25D366; }
   .fb { background: #4267B2; }
 
-  /* Toast popup */
-  .toast {
+  /* Tick animation */
+  .tick-popup {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: maroon;
+    top: 20px;
+    right: 50%;
+    transform: translateX(50%);
+    background: #28a745;
     color: white;
+    font-size: 18px;
     padding: 10px 20px;
-    border-radius: 6px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    border-radius: 50px;
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateY(20px);
     z-index: 9999;
+    transition: opacity 0.4s ease, transform 0.4s ease;
   }
-  .toast.show {
+  .tick-popup.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(50%) translateY(0);
   }
 
   /* Skeleton loading */
@@ -183,7 +185,8 @@
   <button class="fb" onclick="shareFB()">Facebook</button>
 </div>
 
-<div id="toast" class="toast">Added to cart</div>
+<!-- Tick Popup -->
+<div id="tick-popup" class="tick-popup">✔️ Added to cart</div>
 
 <script>
 const CONFIG = {
@@ -223,14 +226,22 @@ function loadProducts() {
         price.className = "price";
         price.innerText = "₹" + item.price;
 
+        // Quantity + Add button
+        const qty = document.createElement("input");
+        qty.type = "number";
+        qty.min = "1";
+        qty.value = "1";
+        qty.className = "qty-input";
+
         const btn = document.createElement("button");
         btn.className = "btn";
         btn.innerText = "Add to Cart";
-        btn.addEventListener("click", () => addToCart(item.name, Number(item.price)));
+        btn.addEventListener("click", () => addToCart(item.name, Number(item.price), Number(qty.value)));
 
         content.appendChild(h3);
         content.appendChild(desc);
         content.appendChild(price);
+        content.appendChild(qty);
         content.appendChild(btn);
 
         card.appendChild(img);
@@ -241,11 +252,12 @@ function loadProducts() {
     .catch(err => console.error("Failed to load products:", err));
 }
 
-function addToCart(name, price) {
+function addToCart(name, price, qty=1) {
+  if (qty < 1) qty = 1;
   const existing = cart.find(i => i.name === name);
-  if (existing) existing.qty++; else cart.push({name, price, qty:1});
+  if (existing) existing.qty += qty; else cart.push({name, price, qty});
   renderCart();
-  showToast(`${name} added to cart ✅`);
+  showTick(`${name} x${qty} added ✅`);
   updateCartBadge();
 }
 
@@ -263,18 +275,18 @@ function renderCart() {
 function updateCartBadge() {
   const badge = document.getElementById("cart-badge");
   let itemCount = cart.reduce((sum, i) => sum + i.qty, 0);
-  badge.innerText = itemCount; // always visible
+  badge.innerText = itemCount;
 }
 
 document.getElementById("cart-icon").addEventListener("click", () => {
   document.getElementById("cart").scrollIntoView({behavior: "smooth"});
 });
 
-function showToast(msg) {
-  const toast = document.getElementById("toast");
-  toast.innerText = msg;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2000);
+function showTick(msg) {
+  const tick = document.getElementById("tick-popup");
+  tick.innerText = msg;
+  tick.classList.add("show");
+  setTimeout(() => tick.classList.remove("show"), 2000);
 }
 
 document.getElementById("checkout-form").addEventListener("submit", e => {
