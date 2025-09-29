@@ -142,8 +142,8 @@
 <body>
 
 <header>
-  <h1>Homemade Sweets & Snacks</h1>
-  <p>Made fresh on order – Taste of Tradition 🍬</p>
+  <h1>delights</h1>
+  <p>Made fresh on order – home made - Taste of Tradition</p>
 </header>
 
 <div id="cart-icon">
@@ -245,7 +245,7 @@ function loadProducts() {
         btn.addEventListener("click", () => {
           let qty = parseInt(qtyInput.value) || 1;
           addToCart(item.name, Number(item.price), qty);
-          addedMsg.innerText = `${qty} pieces added to cart`;
+          addedMsg.innerText = `${qty} units added to cart`;
         });
 
         actions.appendChild(qtyInput);
