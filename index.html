@@ -56,7 +56,6 @@
   .close:hover { color:black; }
   #qr-code { text-align:center; margin:15px 0; }
   #receipt { background:#fffafa; padding:10px; border:1px solid #ddd; border-radius:6px; }
-  #upi-link { display:block; text-align:center; margin:10px 0; color:white; background:maroon; padding:8px; border-radius:4px; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -122,9 +121,8 @@
     <h3>Pay via UPI / QR Code</h3>
     <div id="qr-code"></div>
     <p>Total Amount: ₹<span id="payment-amount"></span></p>
-    <a id="upi-link" href="" target="_blank">Pay via GPay</a>
-    <p style="text-align:center;">Or pay manually using UPI ID: <strong id="upi-text"></strong></p>
-    <button class="btn" onclick="generateReceipt()">I've Paid</button>
+    <a id="upi-link" class="btn" style="display:block;text-align:center;margin-top:10px;">Pay via GPay / UPI App</a>
+    <button class="btn" onclick="generateReceipt()" style="margin-top:10px;">I've Paid</button>
   </div>
 </div>
 
@@ -147,118 +145,52 @@ const CONFIG = {
 };
 
 document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
-document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
+let cart=[];
 
-let cart = [];
-
-// Load products from Google Sheet
-function loadProducts() {
+// Load products
+function loadProducts(){
   fetch(CONFIG.SHEET_PRODUCTS_URL)
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("products");
-      container.innerHTML = "";
-      data.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const img = document.createElement("img");
-        img.src = item.image_url || "https://via.placeholder.com/150";
-        img.alt = item.name;
-
-        const content = document.createElement("div");
-        content.className = "card-content";
-
-        const h3 = document.createElement("h3");
-        h3.innerText = item.name;
-
-        const desc = document.createElement("p");
-        desc.innerText = item.description;
-
-        const priceRow = document.createElement("div");
-        priceRow.className = "price-row";
-        const price = document.createElement("span");
-        price.className = "price";
-        price.innerText = "₹" + item.price;
-        const addedMsg = document.createElement("span");
-        addedMsg.className = "added-msg";
-        priceRow.appendChild(price);
-        priceRow.appendChild(addedMsg);
-
-        const actions = document.createElement("div");
-        actions.className = "product-actions";
-
-        const qtyInput = document.createElement("input");
-        qtyInput.type = "number";
-        qtyInput.min = "1";
-        qtyInput.value = "1";
-        qtyInput.className = "quantity-input";
-
-        const btn = document.createElement("button");
-        btn.className = "btn";
-        btn.innerText = "Add";
-
-        btn.addEventListener("click", () => {
-          let qty = parseInt(qtyInput.value) || 1;
-          addToCart(item.name, Number(item.price), qty);
-          addedMsg.innerText = `${qty} units added to cart`;
-          setTimeout(() => { addedMsg.innerText=""; }, 1500);
-        });
-
-        actions.appendChild(qtyInput);
-        actions.appendChild(btn);
-
-        content.appendChild(h3);
-        content.appendChild(desc);
-        content.appendChild(priceRow);
-        content.appendChild(actions);
-
-        card.appendChild(img);
-        card.appendChild(content);
-        container.appendChild(card);
-      });
-    })
-    .catch(err => console.error("Failed to load products:", err));
+  .then(res=>res.json())
+  .then(data=>{
+    const container=document.getElementById("products");
+    container.innerHTML="";
+    data.forEach(item=>{
+      const card=document.createElement("div"); card.className="card";
+      const img=document.createElement("img"); img.src=item.image_url||"https://via.placeholder.com/150"; img.alt=item.name;
+      const content=document.createElement("div"); content.className="card-content";
+      const h3=document.createElement("h3"); h3.innerText=item.name;
+      const desc=document.createElement("p"); desc.innerText=item.description;
+      const priceRow=document.createElement("div"); priceRow.className="price-row";
+      const price=document.createElement("span"); price.className="price"; price.innerText="₹"+item.price;
+      const addedMsg=document.createElement("span"); addedMsg.className="added-msg"; priceRow.appendChild(price); priceRow.appendChild(addedMsg);
+      const actions=document.createElement("div"); actions.className="product-actions";
+      const qtyInput=document.createElement("input"); qtyInput.type="number"; qtyInput.min="1"; qtyInput.value="1"; qtyInput.className="quantity-input";
+      const btn=document.createElement("button"); btn.className="btn"; btn.innerText="Add";
+      btn.addEventListener("click",()=>{ let qty=parseInt(qtyInput.value)||1; addToCart(item.name,Number(item.price),qty); addedMsg.innerText=`${qty} units added to cart`; setTimeout(()=>{addedMsg.innerText="";},1500); });
+      actions.appendChild(qtyInput); actions.appendChild(btn);
+      content.appendChild(h3); content.appendChild(desc); content.appendChild(priceRow); content.appendChild(actions);
+      card.appendChild(img); card.appendChild(content); container.appendChild(card);
+    });
+  })
+  .catch(err=>console.error("Failed to load products:",err));
 }
 
-// Cart functions
-function addToCart(name, price, qty) {
-  const existing = cart.find(i => i.name===name);
-  if(existing) existing.qty += qty; else cart.push({name, price, qty});
-  renderCart(); updateCartBadge();
-}
-function renderCart() {
-  const container = document.getElementById("cart-items");
-  container.innerHTML = "";
-  let total=0;
-  cart.forEach(item=>{
-    total+=item.price*item.qty;
-    container.innerHTML+=`<div class="cart-item"><span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span></div>`;
-  });
-  document.getElementById("cart-total").innerText=total;
-}
-function updateCartBadge() {
-  const badge=document.getElementById("cart-badge");
-  badge.innerText=cart.reduce((sum,i)=>sum+i.qty,0);
-}
+// Cart
+function addToCart(name,price,qty){ const existing=cart.find(i=>i.name===name); if(existing) existing.qty+=qty; else cart.push({name,price,qty}); renderCart(); updateCartBadge(); }
+function renderCart(){ const container=document.getElementById("cart-items"); container.innerHTML=""; let total=0; cart.forEach(item=>{ total+=item.price*item.qty; container.innerHTML+=`<div class="cart-item"><span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span></div>`; }); document.getElementById("cart-total").innerText=total; }
+function updateCartBadge(){ const badge=document.getElementById("cart-badge"); badge.innerText=cart.reduce((sum,i)=>sum+i.qty,0); }
 document.getElementById("cart-icon").addEventListener("click",()=>{document.getElementById("cart").scrollIntoView({behavior:"smooth"});});
+const dateInput=document.getElementById("cust-date"); const today=new Date().toISOString().split("T")[0]; dateInput.setAttribute("min",today);
 
-// Prevent past dates
-const dateInput=document.getElementById("cust-date");
-const today=new Date().toISOString().split("T")[0];
-dateInput.setAttribute("min",today);
-
-// Checkout form submit → show confirmation modal
-document.getElementById("checkout-form").addEventListener("submit", e=>{
+// Checkout form → Confirmation
+document.getElementById("checkout-form").addEventListener("submit",e=>{
   e.preventDefault();
   const name=document.getElementById("cust-name").value;
   const phone=document.getElementById("cust-phone").value;
   const date=document.getElementById("cust-date").value;
   const address=document.getElementById("cust-address").value;
   const total=document.getElementById("cart-total").innerText;
-
   if(cart.length===0){ alert("Cart is empty!"); return; }
-
   let detailsHTML=`<p><strong>Name:</strong> ${name}</p>`;
   detailsHTML+=`<p><strong>Phone:</strong> ${phone}</p>`;
   detailsHTML+=`<p><strong>Delivery Date:</strong> ${date}</p>`;
@@ -266,37 +198,23 @@ document.getElementById("checkout-form").addEventListener("submit", e=>{
   detailsHTML+=`<p><strong>Items:</strong><br>`;
   cart.forEach(i=>{ detailsHTML+=`${i.name} x ${i.qty} @ ₹${i.price} = ₹${i.qty*i.price}<br>`; });
   detailsHTML+=`</p><p><strong>Total:</strong> ₹${total}</p>`;
-
   document.getElementById("confirm-details").innerHTML=detailsHTML;
   openModal('confirm-modal');
 });
 
-// Confirmation → Proceed to Payment
+// Confirmation → Payment
 function proceedPayment(){
   closeModal('confirm-modal');
   const total=document.getElementById("cart-total").innerText;
   document.getElementById("payment-amount").innerText=total;
-
   const upiString=`upi://pay?pa=${CONFIG.UPI_ID}&pn=Delights&am=${total}&cu=INR`;
-  QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
-    if (error) console.error(error);
-  });
-
-  // THIS WILL LAUNCH GPay OR ANY UPI APP WHEN CLICKED
-  const upiLink = document.getElementById("upi-link");
-  upiLink.href = upiString;
-  upiLink.target = "_self";
-
+  QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) { if (error) console.error(error); });
+  const upiLink=document.getElementById("upi-link");
+  upiLink.href=upiString; upiLink.setAttribute("target","_blank");
   openModal('payment-modal');
 }
 
-
-  document.getElementById("upi-link").href=`https://pay.google.com/upi/pay?pa=${CONFIG.UPI_ID}&pn=Delights&am=${total}&cu=INR`;
-
-  openModal('payment-modal');
-}
-
-// Payment → Generate Receipt
+// Payment → Receipt
 function generateReceipt(){
   closeModal('payment-modal');
   const name=document.getElementById("cust-name").value;
@@ -304,7 +222,6 @@ function generateReceipt(){
   const date=document.getElementById("cust-date").value;
   const address=document.getElementById("cust-address").value;
   const total=document.getElementById("cart-total").innerText;
-
   let receiptHTML=`<p><strong>Name:</strong> ${name}</p>`;
   receiptHTML+=`<p><strong>Phone:</strong> ${phone}</p>`;
   receiptHTML+=`<p><strong>Delivery Date:</strong> ${date}</p>`;
@@ -312,35 +229,20 @@ function generateReceipt(){
   receiptHTML+=`<p><strong>Items:</strong><br>`;
   cart.forEach(i=>{ receiptHTML+=`${i.name} x ${i.qty} @ ₹${i.price} = ₹${i.qty*i.price}<br>`; });
   receiptHTML+=`</p><p><strong>Total Paid:</strong> ₹${total}</p>`;
-  receiptHTML+=`<p>Paid via GPay/UPI (QR or link)</p>`;
-
+  receiptHTML+=`<p>Paid via GPay/UPI (QR)</p>`;
   document.getElementById("receipt").innerHTML=receiptHTML;
   openModal('receipt-modal');
-
   cart=[]; renderCart(); updateCartBadge();
   document.getElementById("checkout-form").reset();
 }
 
-// Share receipt via WhatsApp
-function shareOrder(){
-  const text=document.getElementById("receipt").innerText;
-  const waLink=`https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(text)}`;
-  window.open(waLink,"_blank");
-}
-
-// Modal helpers
+// Share
+function shareOrder(){ const text=document.getElementById("receipt").innerText; const waLink=`https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(text)}`; window.open(waLink,"_blank"); }
 function openModal(id){ document.getElementById(id).style.display="block"; }
 function closeModal(id){ document.getElementById(id).style.display="none"; }
-
-// Share menu buttons
 function shareWA(){ window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${location.href}`,"_blank"); }
 function shareFB(){ window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`,"_blank"); }
-
-// Proceed to Confirmation Button
-document.getElementById("proceed-confirm").addEventListener("click",()=>{
-  document.getElementById("checkout").scrollIntoView({behavior:"smooth"});
-});
-
+document.getElementById("proceed-confirm").addEventListener("click",()=>{document.getElementById("checkout").scrollIntoView({behavior:"smooth"});});
 loadProducts();
 </script>
 </body>
