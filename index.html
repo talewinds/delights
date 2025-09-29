@@ -1,329 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sweets & Snacks Made to Order</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0; padding: 0;
-    background: #fffaf4; color: #333;
-  }
-  header {
-    background: maroon; color: white;
-    padding: 15px; text-align: center;
-    position: relative;
-  }
-  header h1 { margin: 0; }
-  header p { margin: 5px 0 0; font-size: 14px; }
-
-  /* Fixed Cart Icon */
-  #cart-icon {
-    position: fixed;
-    top: 15px; right: 15px;
-    width: 40px; height: 40px;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  #cart-icon svg {
-    width: 100%; height: 100%;
-    fill: #28a745; /* green color */
-  }
-  .cart-badge {
-    position: absolute;
-    top: -8px; right: -8px;
-    background: gold;
-    color: black;
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 50%;
-    font-size: 14px;
-    display: inline-block;
-    pointer-events: none;
-  }
-
-  .products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 15px; padding: 20px;
-  }
-  .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .card img {
-    width: 100%; height: 150px; object-fit: cover;
-    background: #eee;
-  }
-  .card-content { padding: 10px; }
-  .card h3 { margin: 5px 0; color: maroon; }
-  .price { font-weight: bold; margin: 5px 0; }
-  .qty-input {
-    width: 60px; padding: 5px;
-    margin-right: 5px; text-align: center;
-  }
-  .btn {
-    background: maroon; color: white;
-    border: none; padding: 8px 12px;
-    margin-top: 8px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  .btn:hover { background: #a00000; }
-
-  #cart { padding: 20px; }
-  #cart h2 { color: maroon; }
-  .cart-item {
-    display: flex; justify-content: space-between;
-    border-bottom: 1px solid #ddd;
-    padding: 8px 0;
-  }
-
-  #checkout { padding: 20px; }
-  #checkout h2 { color: maroon; }
-  label { display: block; margin-top: 10px; }
-  input, textarea {
-    width: 100%; padding: 8px; margin-top: 5px;
-    border: 1px solid #ccc; border-radius: 4px;
-  }
-
-  .share { margin: 20px; text-align: center; }
-  .share button {
-    margin: 5px; padding: 10px 15px;
-    border: none; border-radius: 5px;
-    cursor: pointer; color: white;
-  }
-  .wa { background: #25D366; }
-  .fb { background: #4267B2; }
-
-  /* Tick animation */
-  .tick-popup {
-    position: fixed;
-    top: 20px;
-    right: 50%;
-    transform: translateX(50%);
-    background: #28a745;
-    color: white;
-    font-size: 18px;
-    padding: 10px 20px;
-    border-radius: 50px;
-    opacity: 0;
-    z-index: 9999;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-  .tick-popup.show {
-    opacity: 1;
-    transform: translateX(50%) translateY(0);
-  }
-
-  /* Skeleton loading */
-  .skeleton {
-    background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweets & Snacks Made to Order</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #fffaf4;
+      color: #333;
+    }
+    header {
+      background: #800000;
+      color: white;
+      text-align: center;
+      padding: 1em;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .product {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+    }
+    .product img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    .product h3 {
+      margin: 10px 0 5px;
+    }
+    .product p {
+      margin: 5px 0;
+    }
+    .quantity {
+      margin: 8px 0;
+    }
+    .quantity input {
+      width: 60px;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      text-align: center;
+    }
+    .product button {
+      background: #800000;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .product button:hover {
+      background: #a52a2a;
+    }
+    .cart {
+      background: linear-gradient(135deg, #ffe6e6, #fff0f5);
+      border-top: 4px solid #800000;
+      padding: 15px;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+    }
+    .cart h2 {
+      margin-top: 0;
+      color: #800000;
+    }
+    .cart ul {
+      list-style: none;
+      padding: 0;
+    }
+    .cart ul li {
+      padding: 5px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .cart p {
+      font-weight: bold;
+    }
+    .feedback {
+      position: absolute;
+      bottom: 50px; /* directly above Add to Cart button */
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4caf50;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease-out;
+    }
+    .feedback.show {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Sweets & Snacks Made to Order</h1>
+  </header>
 
-<header>
-  <h1>Homemade Sweets & Snacks</h1>
-  <p>Made fresh on order – Taste of Tradition 🍬</p>
-</header>
+  <div class="container">
+    <div class="product">
+      <img src="https://via.placeholder.com/200" alt="Ladus">
+      <h3>Ladus</h3>
+      <p>₹5 each</p>
+      <div class="quantity">
+        <label for="qty-ladu">Qty:</label>
+        <input type="number" id="qty-ladu" min="1" value="1">
+      </div>
+      <div class="feedback">Added to cart ✓</div>
+      <button onclick="addToCart('Ladus', 5, document.getElementById('qty-ladu').value, this)">Add to Cart</button>
+    </div>
 
-<!-- Fixed Green Cart Icon -->
-<div id="cart-icon">
-  <svg viewBox="0 0 24 24" width="40" height="40">
-    <path fill="#28a745" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 
-    0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7.16 14.26l.84-1.66h8.97c.75 
-    0 1.41-.41 1.75-1.03l3.58-6.49-.03-.02a1 1 0 0 0-.88-.48H5.21l-.94-2H0v2h2l3.6 
-    7.59-1.35 2.44c-.18.32-.25.69-.19 1.05.1.56.58.97 1.14.97h12v-2H7.16z"/>
-  </svg>
-  <div id="cart-badge" class="cart-badge">0</div>
-</div>
+    <div class="product">
+      <img src="https://via.placeholder.com/200" alt="Murukku">
+      <h3>Murukku</h3>
+      <p>₹10 each</p>
+      <div class="quantity">
+        <label for="qty-murukku">Qty:</label>
+        <input type="number" id="qty-murukku" min="1" value="1">
+      </div>
+      <div class="feedback">Added to cart ✓</div>
+      <button onclick="addToCart('Murukku', 10, document.getElementById('qty-murukku').value, this)">Add to Cart</button>
+    </div>
+  </div>
 
-<section id="products" class="products">
-  <!-- initial skeletons -->
-  <div class="card skeleton"><div style="height:150px;"></div><div class="card-content"><h3 style="height:20px;width:70%;"></h3><p style="height:15px;width:90%;"></p><p style="height:15px;width:50%;"></p><button class="btn" style="opacity:0"></button></div></div>
-  <div class="card skeleton"><div style="height:150px;"></div><div class="card-content"><h3 style="height:20px;width:70%;"></h3><p style="height:15px;width:90%;"></p><p style="height:15px;width:50%;"></p><button class="btn" style="opacity:0"></button></div></div>
-  <div class="card skeleton"><div style="height:150px;"></div><div class="card-content"><h3 style="height:20px;width:70%;"></h3><p style="height:15px;width:90%;"></p><p style="height:15px;width:50%;"></p><button class="btn" style="opacity:0"></button></div></div>
-</section>
+  <div class="cart">
+    <h2>Shopping Cart 🛒</h2>
+    <ul id="cart-items"></ul>
+    <p id="total">Total: ₹0</p>
+  </div>
 
-<section id="cart">
-  <h2>🛒 Your Cart</h2>
-  <div id="cart-items"></div>
-  <p><strong>Total:</strong> ₹<span id="cart-total">0</span></p>
-</section>
+  <script>
+    let cart = [];
+    
+    function addToCart(name, price, qty, btn) {
+      qty = parseInt(qty);
+      if (isNaN(qty) || qty < 1) qty = 1;
 
-<section id="checkout">
-  <h2>Checkout</h2>
-  <form id="checkout-form">
-    <label>Name <input type="text" id="cust-name" required></label>
-    <label>Phone <input type="text" id="cust-phone" required></label>
-    <label>Delivery Date <input type="date" id="cust-date" required></label>
-    <label>Address <textarea id="cust-address"></textarea></label>
-    <p><strong>Pay Advance via GPay:</strong><br>
-    UPI ID: <span id="upi-id"></span></p>
-    <button type="submit" class="btn">Confirm Order</button>
-  </form>
-</section>
+      // Check if item already exists
+      let item = cart.find(i => i.name === name);
+      if (item) {
+        item.qty += qty;
+      } else {
+        cart.push({ name, price, qty });
+      }
+      updateCart();
 
-<div class="share">
-  <p>Share this menu:</p>
-  <button class="wa" onclick="shareWA()">WhatsApp</button>
-  <button class="fb" onclick="shareFB()">Facebook</button>
-</div>
+      // Show feedback above button
+      let feedback = btn.parentElement.querySelector('.feedback');
+      feedback.classList.add('show');
+      setTimeout(() => {
+        feedback.classList.remove('show');
+      }, 1200);
+    }
 
-<!-- Tick Popup -->
-<div id="tick-popup" class="tick-popup">✔️ Added to cart</div>
+    function updateCart() {
+      let list = document.getElementById('cart-items');
+      list.innerHTML = '';
+      let total = 0;
 
-<script>
-const CONFIG = {
-  OWNER_PHONE: "918281566744",
-  UPI_ID: "yourupi@bank",
-  SHEET_PRODUCTS_URL: "https://script.google.com/macros/s/AKfycbwJx535jhdv70wneiEj5qZSPqvOHJpP2B-t7hXK0RgaM1K7a_5uAiWz3OL6ETt1rYhwPg/exec",
-  ORDER_LOG_URL: ""
-};
-
-document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
-let cart = [];
-
-function loadProducts() {
-  fetch(CONFIG.SHEET_PRODUCTS_URL)
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("products");
-      container.innerHTML = "";
-      data.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const img = document.createElement("img");
-        img.src = item.image_url || "https://via.placeholder.com/150";
-        img.alt = item.name;
-
-        const content = document.createElement("div");
-        content.className = "card-content";
-
-        const h3 = document.createElement("h3");
-        h3.innerText = item.name;
-
-        const desc = document.createElement("p");
-        desc.innerText = item.description;
-
-        const price = document.createElement("p");
-        price.className = "price";
-        price.innerText = "₹" + item.price;
-
-        // Quantity + Add button
-        const qty = document.createElement("input");
-        qty.type = "number";
-        qty.min = "1";
-        qty.value = "1";
-        qty.className = "qty-input";
-
-        const btn = document.createElement("button");
-        btn.className = "btn";
-        btn.innerText = "Add to Cart";
-        btn.addEventListener("click", () => addToCart(item.name, Number(item.price), Number(qty.value)));
-
-        content.appendChild(h3);
-        content.appendChild(desc);
-        content.appendChild(price);
-        content.appendChild(qty);
-        content.appendChild(btn);
-
-        card.appendChild(img);
-        card.appendChild(content);
-        container.appendChild(card);
+      cart.forEach(item => {
+        let li = document.createElement('li');
+        li.textContent = `${item.name} x ${item.qty} = ₹${item.price * item.qty}`;
+        list.appendChild(li);
+        total += item.price * item.qty;
       });
-    })
-    .catch(err => console.error("Failed to load products:", err));
-}
 
-function addToCart(name, price, qty=1) {
-  if (qty < 1) qty = 1;
-  const existing = cart.find(i => i.name === name);
-  if (existing) existing.qty += qty; else cart.push({name, price, qty});
-  renderCart();
-  showTick(`${name} x${qty} added ✅`);
-  updateCartBadge();
-}
-
-function renderCart() {
-  const container = document.getElementById("cart-items");
-  container.innerHTML = "";
-  let total = 0;
-  cart.forEach(item => {
-    total += item.price * item.qty;
-    container.innerHTML += `<div class="cart-item"><span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span></div>`;
-  });
-  document.getElementById("cart-total").innerText = total;
-}
-
-function updateCartBadge() {
-  const badge = document.getElementById("cart-badge");
-  let itemCount = cart.reduce((sum, i) => sum + i.qty, 0);
-  badge.innerText = itemCount;
-}
-
-document.getElementById("cart-icon").addEventListener("click", () => {
-  document.getElementById("cart").scrollIntoView({behavior: "smooth"});
-});
-
-function showTick(msg) {
-  const tick = document.getElementById("tick-popup");
-  tick.innerText = msg;
-  tick.classList.add("show");
-  setTimeout(() => tick.classList.remove("show"), 2000);
-}
-
-document.getElementById("checkout-form").addEventListener("submit", e => {
-  e.preventDefault();
-  const name = document.getElementById("cust-name").value;
-  const phone = document.getElementById("cust-phone").value;
-  const date = document.getElementById("cust-date").value;
-  const address = document.getElementById("cust-address").value;
-  const total = document.getElementById("cart-total").innerText;
-
-  const orderMsg = `Order Confirmation
-Name: ${name}
-Phone: ${phone}
-Delivery Date: ${date}
-Address: ${address}
-Items: ${cart.map(i=>i.name+' x'+i.qty).join(', ')}
-Total: ₹${total}
-Payment: Paid advance via GPay (${CONFIG.UPI_ID})`;
-
-  const waLink = `https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(orderMsg)}`;
-  window.open(waLink, "_blank");
-
-  if (CONFIG.ORDER_LOG_URL) {
-    fetch(CONFIG.ORDER_LOG_URL, { method: "POST", body: JSON.stringify({name, phone, date, address, cart, total}), headers: {"Content-Type":"application/json"} });
-  }
-
-  alert("Order sent via WhatsApp!");
-  cart = [];
-  renderCart();
-  updateCartBadge();
-  e.target.reset();
-});
-
-function shareWA() { window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${location.href}`, "_blank"); }
-function shareFB() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`, "_blank"); }
-
-loadProducts();
-</script>
+      document.getElementById('total').textContent = `Total: ₹${total}`;
+    }
+  </script>
 </body>
 </html>
