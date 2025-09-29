@@ -282,6 +282,15 @@ function proceedPayment(){
     if (error) console.error(error);
   });
 
+  // THIS WILL LAUNCH GPay OR ANY UPI APP WHEN CLICKED
+  const upiLink = document.getElementById("upi-link");
+  upiLink.href = upiString;
+  upiLink.target = "_self";
+
+  openModal('payment-modal');
+}
+
+
   document.getElementById("upi-link").href=`https://pay.google.com/upi/pay?pa=${CONFIG.UPI_ID}&pn=Delights&am=${total}&cu=INR`;
 
   openModal('payment-modal');
