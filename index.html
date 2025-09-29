@@ -292,6 +292,13 @@ document.getElementById("cart-icon").addEventListener("click", () => {
   document.getElementById("cart").scrollIntoView({behavior: "smooth"});
 });
 
+// Prevent past dates
+const dateInput = document.getElementById("cust-date");
+const today = new Date().toISOString().split("T")[0];
+dateInput.setAttribute("min", today);
+
+// Change default "Set" behavior: remove cancel, rename to OK handled by native browser date picker
+
 document.getElementById("checkout-form").addEventListener("submit", e => {
   e.preventDefault();
   const name = document.getElementById("cust-name").value;
@@ -305,7 +312,7 @@ Name: ${name}
 Phone: ${phone}
 Delivery Date: ${date}
 Address: ${address}
-Items: ${cart.map(i=>i.name+' x'+i.qty).join(', ')}
+Items: ${cart.map(i=>i.name+' x'+i.qty).join(', ') }
 Total: ₹${total}
 Payment: Paid advance via GPay (${CONFIG.UPI_ID})`;
 
