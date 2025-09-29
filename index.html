@@ -16,18 +16,31 @@
     position: relative;
   }
   header h1 { margin: 0; }
+  header p { margin: 5px 0 0; font-size: 14px; }
+
+  /* Fixed Cart Icon */
+  #cart-icon {
+    position: fixed;
+    top: 15px; right: 15px;
+    width: 40px; height: 40px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  #cart-icon img { width: 100%; height: 100%; }
+
   .cart-badge {
     position: absolute;
-    top: 15px; right: 15px;
+    top: -8px; right: -8px;
     background: gold;
     color: black;
     font-weight: bold;
     padding: 4px 8px;
     border-radius: 50%;
     font-size: 14px;
-    display: none;
-    cursor: pointer;
+    display: inline-block;
+    pointer-events: none;
   }
+
   .products {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -59,6 +72,7 @@
     width: 100%;
   }
   .btn:hover { background: #a00000; }
+
   #cart { padding: 20px; }
   #cart h2 { color: maroon; }
   .cart-item {
@@ -66,6 +80,7 @@
     border-bottom: 1px solid #ddd;
     padding: 8px 0;
   }
+
   #checkout { padding: 20px; }
   #checkout h2 { color: maroon; }
   label { display: block; margin-top: 10px; }
@@ -73,6 +88,7 @@
     width: 100%; padding: 8px; margin-top: 5px;
     border: 1px solid #ccc; border-radius: 4px;
   }
+
   .share { margin: 20px; text-align: center; }
   .share button {
     margin: 5px; padding: 10px 15px;
@@ -120,8 +136,13 @@
 <header>
   <h1>Homemade Sweets & Snacks</h1>
   <p>Made fresh on order – Taste of Tradition 🍬</p>
-  <div id="cart-badge" class="cart-badge"></div>
 </header>
+
+<!-- Fixed Cart Icon -->
+<div id="cart-icon">
+  <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="Cart">
+  <div id="cart-badge" class="cart-badge">0</div>
+</div>
 
 <section id="products" class="products">
   <!-- initial skeletons -->
@@ -235,11 +256,10 @@ function renderCart() {
 function updateCartBadge() {
   const badge = document.getElementById("cart-badge");
   let itemCount = cart.reduce((sum, i) => sum + i.qty, 0);
-  if (itemCount > 0) { badge.style.display = "inline-block"; badge.innerText = itemCount; } 
-  else badge.style.display = "none";
+  badge.innerText = itemCount; // always show
 }
 
-document.getElementById("cart-badge").addEventListener("click", () => {
+document.getElementById("cart-icon").addEventListener("click", () => {
   document.getElementById("cart").scrollIntoView({behavior: "smooth"});
 });
 
