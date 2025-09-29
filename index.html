@@ -1,144 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Homemade Sweets & Snacks</title>
-<style>
-  /* ==== GENERAL BODY & FONT ==== */
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0; padding: 0;
-    background: linear-gradient(to bottom, #fffaf4, #fff0e0);
-    color: #333;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sweets & Snacks Made to Order</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #fffaf4; color: #333;
+    }
+    header {
+      background: maroon; color: white;
+      padding: 15px; text-align: center;
+      position: relative;
+    }
+    header h1 { margin: 0; }
+    .cart-badge {
+      position: absolute;
+      top: 15px; right: 15px;
+      background: gold;
+      color: black;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 50%;
+      font-size: 14px;
+      display: none;
+      cursor: pointer;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px; padding: 20px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card img {
+      width: 100%; height: 150px; object-fit: cover;
+    }
+    .card-content { padding: 10px; }
+    .card h3 { margin: 5px 0; color: maroon; }
+    .price { font-weight: bold; margin: 5px 0; }
+    .btn {
+      background: maroon; color: white;
+      border: none; padding: 8px 12px;
+      margin-top: 8px;
+      cursor: pointer;
+      border-radius: 4px;
+      width: 100%;
+    }
+    .btn:hover { background: #a00000; }
+    #cart { padding: 20px; }
+    #cart h2 { color: maroon; }
+    .cart-item {
+      display: flex; justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+    #checkout { padding: 20px; }
+    #checkout h2 { color: maroon; }
+    label { display: block; margin-top: 10px; }
+    input, textarea {
+      width: 100%; padding: 8px; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 4px;
+    }
+    .share {
+      margin: 20px; text-align: center;
+    }
+    .share button {
+      margin: 5px; padding: 10px 15px;
+      border: none; border-radius: 5px;
+      cursor: pointer; color: white;
+    }
+    .wa { background: #25D366; }
+    .fb { background: #4267B2; }
 
-  /* ==== HEADER ==== */
-  header {
-    background: linear-gradient(135deg, #800000, #c00000);
-    color: #fff;
-    padding: 20px; text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  }
-  header h1 {
-    margin: 0;
-    font-size: 2rem;
-    letter-spacing: 1px;
-  }
-  header p {
-    margin: 5px 0 0 0;
-    font-style: italic;
-    color: #ffe6b3;
-  }
-
-  /* ==== PRODUCT GRID ==== */
-  .products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px; padding: 20px;
-  }
-
-  /* ==== PRODUCT CARD ==== */
-  .card, .skeleton-card {
-    border-radius: 12px;
-    background: #fff3e6;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-  }
-  .card img {
-    width: 100%; height: 160px; object-fit: cover;
-  }
-  .card-content { padding: 12px; }
-  .card h3 {
-    margin: 6px 0;
-    color: #800000;
-    font-size: 1.2rem;
-  }
-  .card p { margin: 4px 0; }
-  .price {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #c06000;
-  }
-
-  /* ==== BUTTONS ==== */
-  .btn {
-    background: linear-gradient(135deg, #800000, #c00000);
-    color: #fff;
-    border: none;
-    padding: 10px;
-    margin-top: 8px;
-    cursor: pointer;
-    border-radius: 8px;
-    width: 100%;
-    font-weight: bold;
-    transition: background 0.3s;
-  }
-  .btn:hover { background: linear-gradient(135deg, #a00000, #ff4d4d); }
-
-  /* ==== CART ==== */
-  #cart, #checkout {
-    padding: 20px;
-    background: #fff3e6;
-    margin: 10px 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  }
-  #cart h2, #checkout h2 { color: #800000; margin-top: 0; }
-  .cart-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #ffd9b3; }
-  label { display: block; margin-top: 10px; font-weight: bold; }
-  input, textarea {
-    width: 100%; padding: 10px; margin-top: 5px;
-    border: 1px solid #ccc; border-radius: 6px;
-    font-size: 1rem;
-  }
-
-  /* ==== SHARE BUTTONS ==== */
-  .share { margin: 20px; text-align: center; }
-  .share button {
-    margin: 5px; padding: 12px 20px;
-    border: none; border-radius: 8px;
-    cursor: pointer; color: white;
-    font-weight: bold;
-    transition: transform 0.2s;
-  }
-  .share button:hover { transform: scale(1.05); }
-  .wa { background: #25D366; }
-  .fb { background: #4267B2; }
-
-  /* ==== SKELETON LOADER ==== */
-  .skeleton-card {
-    animation: pulse 1.5s infinite;
-  }
-  .skeleton-img { height: 160px; background: #e0c7b0; }
-  .skeleton-line { height: 15px; background: #e0c7b0; margin: 6px 0; border-radius: 6px; }
-  .skeleton-line.short { width: 60%; }
-  @keyframes pulse {
-    0% { background-color: #e0c7b0; }
-    50% { background-color: #f3d9b8; }
-    100% { background-color: #e0c7b0; }
-  }
-
-</style>
+    /* Toast popup */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: maroon;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(20px);
+      z-index: 9999;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
 <body>
 
 <header>
   <h1>Homemade Sweets & Snacks</h1>
   <p>Made fresh on order – Taste of Tradition 🍬</p>
+  <div id="cart-badge" class="cart-badge"></div>
 </header>
 
-<section id="products" class="products">
-  <!-- Skeleton cards inserted via JS -->
-</section>
+<section id="products" class="products"></section>
 
 <section id="cart">
   <h2>🛒 Your Cart</h2>
@@ -153,7 +128,8 @@
     <label>Phone <input type="text" id="cust-phone" required></label>
     <label>Delivery Date <input type="date" id="cust-date" required></label>
     <label>Address <textarea id="cust-address"></textarea></label>
-    <p><strong>Pay Advance via GPay:</strong><br>UPI ID: <span id="upi-id"></span></p>
+    <p><strong>Pay Advance via GPay:</strong><br>
+    UPI ID: <span id="upi-id"></span></p>
     <button type="submit" class="btn">Confirm Order</button>
   </form>
 </section>
@@ -163,6 +139,9 @@
   <button class="wa" onclick="shareWA()">WhatsApp</button>
   <button class="fb" onclick="shareFB()">Facebook</button>
 </div>
+
+<!-- Toast -->
+<div id="toast" class="toast">Added to cart</div>
 
 <script>
 const CONFIG = {
@@ -176,78 +155,110 @@ document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
 
 let cart = [];
 
-// Show skeleton placeholders
-function showSkeletons(count=6){
-  const container = document.getElementById("products");
+function loadProducts() {
+  fetch(CONFIG.SHEET_PRODUCTS_URL)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = item.image_url || "https://via.placeholder.com/150";
+        img.alt = item.name;
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const h3 = document.createElement("h3");
+        h3.innerText = item.name;
+
+        const desc = document.createElement("p");
+        desc.innerText = item.description;
+
+        const price = document.createElement("p");
+        price.className = "price";
+        price.innerText = "₹" + item.price;
+
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.innerText = "Add to Cart";
+        btn.addEventListener("click", () => addToCart(item.name, Number(item.price)));
+
+        content.appendChild(h3);
+        content.appendChild(desc);
+        content.appendChild(price);
+        content.appendChild(btn);
+
+        card.appendChild(img);
+        card.appendChild(content);
+        container.appendChild(card);
+      });
+    })
+    .catch(err => console.error("Failed to load products:", err));
+}
+
+function addToCart(name, price) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({name, price, qty:1});
+  }
+  renderCart();
+  showToast(`${name} added to cart ✅`);
+  updateCartBadge();
+}
+
+function renderCart() {
+  const container = document.getElementById("cart-items");
   container.innerHTML = "";
-  for(let i=0;i<count;i++){
-    const skeleton = document.createElement("div");
-    skeleton.className="skeleton-card";
-    skeleton.innerHTML = `<div class="skeleton-img"></div><div class="card-content">
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-      <div class="skeleton-line"></div>
-      <div class="skeleton-line short"></div>
-    </div>`;
-    container.appendChild(skeleton);
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    container.innerHTML += `
+      <div class="cart-item">
+        <span>${item.name} x ${item.qty}</span>
+        <span>₹${item.price*item.qty}</span>
+      </div>
+    `;
+  });
+  document.getElementById("cart-total").innerText = total;
+}
+
+function updateCartBadge() {
+  const badge = document.getElementById("cart-badge");
+  let itemCount = cart.reduce((sum, i) => sum + i.qty, 0);
+  if (itemCount > 0) {
+    badge.style.display = "inline-block";
+    badge.innerText = itemCount;
+  } else {
+    badge.style.display = "none";
   }
 }
 
-// Load products from Google Sheet
-function loadProducts(){
-  showSkeletons();
-  fetch(CONFIG.SHEET_PRODUCTS_URL)
-    .then(res=>res.json())
-    .then(data=>{
-      const container = document.getElementById("products");
-      container.innerHTML="";
-      if(data.length===0){
-        container.innerHTML="<p style='text-align:center;'>No products found</p>"; return;
-      }
-      data.forEach(item=>{
-        const card=document.createElement("div"); card.className="card";
-        const img=document.createElement("img"); img.src=item.image_url||"https://via.placeholder.com/150"; img.alt=item.name;
-        const content=document.createElement("div"); content.className="card-content";
-        const h3=document.createElement("h3"); h3.innerText=item.name;
-        const desc=document.createElement("p"); desc.innerText=item.description;
-        const price=document.createElement("p"); price.className="price"; price.innerText="₹"+item.price;
-        const btn=document.createElement("button"); btn.className="btn"; btn.innerText="Add to Cart";
-        btn.addEventListener("click",()=>addToCart(item.name, Number(item.price)));
-        content.appendChild(h3); content.appendChild(desc); content.appendChild(price); content.appendChild(btn);
-        card.appendChild(img); card.appendChild(content); container.appendChild(card);
-      });
-    })
-    .catch(err=>{
-      console.error("Failed to load products:", err);
-      document.getElementById("products").innerHTML="<p style='text-align:center; color:red;'>Failed to load products</p>";
-    });
+document.getElementById("cart-badge").addEventListener("click", () => {
+  document.getElementById("cart").scrollIntoView({behavior: "smooth"});
+});
+
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.innerText = msg;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2000);
 }
 
-function addToCart(name, price){
-  const existing=cart.find(i=>i.name===name);
-  if(existing) existing.qty++; else cart.push({name,price,qty:1});
-  renderCart();
-}
-
-function renderCart(){
-  const container=document.getElementById("cart-items"); container.innerHTML="";
-  let total=0;
-  cart.forEach(item=>{
-    total+=item.price*item.qty;
-    container.innerHTML+=`<div class="cart-item"><span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span></div>`;
-  });
-  document.getElementById("cart-total").innerText=total;
-}
-
-document.getElementById("checkout-form").addEventListener("submit", e=>{
+document.getElementById("checkout-form").addEventListener("submit", e => {
   e.preventDefault();
-  const name=document.getElementById("cust-name").value;
-  const phone=document.getElementById("cust-phone").value;
-  const date=document.getElementById("cust-date").value;
-  const address=document.getElementById("cust-address").value;
-  const total=document.getElementById("cart-total").innerText;
+  const name = document.getElementById("cust-name").value;
+  const phone = document.getElementById("cust-phone").value;
+  const date = document.getElementById("cust-date").value;
+  const address = document.getElementById("cust-address").value;
+  const total = document.getElementById("cart-total").innerText;
 
-  const orderMsg=`Order Confirmation
+  const orderMsg = `Order Confirmation
 Name: ${name}
 Phone: ${phone}
 Delivery Date: ${date}
@@ -256,25 +267,35 @@ Items: ${cart.map(i=>i.name+' x'+i.qty).join(', ')}
 Total: ₹${total}
 Payment: Paid advance via GPay (${CONFIG.UPI_ID})`;
 
-  window.open(`https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(orderMsg)}`,"_blank");
+  const waLink = `https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(orderMsg)}`;
+  window.open(waLink, "_blank");
 
-  if(CONFIG.ORDER_LOG_URL){
-    fetch(CONFIG.ORDER_LOG_URL,{
-      method:"POST",
-      body:JSON.stringify({name, phone, date, address, cart, total}),
-      headers:{"Content-Type":"application/json"}
+  if (CONFIG.ORDER_LOG_URL) {
+    fetch(CONFIG.ORDER_LOG_URL, {
+      method: "POST",
+      body: JSON.stringify({name, phone, date, address, cart, total}),
+      headers: {"Content-Type":"application/json"}
     });
   }
 
   alert("Order sent via WhatsApp!");
-  cart=[]; renderCart(); e.target.reset();
+  cart = [];
+  renderCart();
+  updateCartBadge();
+  e.target.reset();
 });
 
-function shareWA(){ window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${location.href}`,"_blank"); }
-function shareFB(){ window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`,"_blank"); }
+function shareWA() {
+  const link = location.href;
+  window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${link}`, "_blank");
+}
+
+function shareFB() {
+  const link = location.href;
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, "_blank");
+}
 
 loadProducts();
 </script>
-
 </body>
 </html>
