@@ -2,11 +2,8 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8" />
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
 <title>Sweets & Snacks Made to Order</title>
 
 <style>
@@ -28,7 +25,7 @@
   .card h3 { margin:5px 0; color:maroon; }
   .price-row { display:flex; align-items:center; justify-content:space-between; }
   .price { font-weight:bold; margin:5px 0; }
-  .added-msg { color:green; font-size:13px; margin-left:10px; white-space:nowrap; }
+  .added-msg { color:green; font-size:14px; font-weight:bold; margin-left:10px; white-space:nowrap; }
 
   .product-actions { display:flex; align-items:center; margin-top:5px; }
   .quantity-input { width:60px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align:center; margin-right:8px; }
@@ -38,7 +35,8 @@
   /* Cart & Checkout */
   #cart { padding:20px; background:linear-gradient(135deg,#fff5f5,#ffe6e6,#fffaf4); }
   #cart h2 { color:maroon; }
-  .cart-item { display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding:8px 0; }
+  .cart-item { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding:8px 0; }
+  .cart-item input { width:50px; text-align:center; }
   #checkout { padding:20px; }
   #checkout h2 { color:maroon; }
   label { display:block; margin-top:10px; }
@@ -63,11 +61,9 @@
   #receipt { background:#fffafa; padding:10px; border:1px solid #ddd; border-radius:6px; }
   .upi-fallback { text-align:center; margin-top:8px; font-weight:600; }
 </style>
-
 </head>
 
 <body>
-
 <header>
   <h1>delights</h1>
   <p>Made fresh on order – home made - Taste of Tradition</p>
@@ -129,13 +125,8 @@
     <h3>Pay via UPI / QR Code</h3>
     <div id="qr-code"></div>
     <p>Total Amount: ₹<span id="payment-amount"></span></p>
-
-    <!-- UPI app link (will open UPI apps when tapped on mobile) -->
     <a id="upi-link" class="btn" style="display:block;text-align:center;margin-top:10px;">Pay via GPay / UPI App</a>
-
-    <!-- Manual fallback always visible -->
     <p class="upi-fallback">Or pay manually using UPI ID: <span id="upi-text" style="font-weight:700"></span></p>
-
     <button class="btn" onclick="generateReceipt()" style="margin-top:10px;">I've Paid</button>
   </div>
 </div>
@@ -164,7 +155,7 @@ document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
 
 let cart = [];
 
-// Load products from Google Sheet (unchanged)
+// Load products
 function loadProducts() {
   fetch(CONFIG.SHEET_PRODUCTS_URL)
     .then(res => res.json())
@@ -213,9 +204,8 @@ function loadProducts() {
 
         btn.addEventListener("click", () => {
           let qty = parseInt(qtyInput.value) || 1;
-          addToCart(item.name, Number(item.price), qty);
-          addedMsg.innerText = `${qty} units added to cart`;
-          setTimeout(() => { addedMsg.innerText=""; }, 1500);
+          const existed = addToCart(item.name, Number(item.price), qty);
+          addedMsg.innerText = existed ? "Already in cart — edit quantity in cart" : `${qty} units added to cart`;
         });
 
         actions.appendChild(qtyInput);
@@ -234,22 +224,48 @@ function loadProducts() {
     .catch(err => console.error("Failed to load products:", err));
 }
 
-// Cart functions (unchanged)
+// Add to cart
 function addToCart(name, price, qty) {
   const existing = cart.find(i => i.name === name);
-  if (existing) existing.qty += qty; else cart.push({name, price, qty});
-  renderCart(); updateCartBadge();
+  if (existing) {
+    return true; // already in cart
+  } else {
+    cart.push({name, price, qty});
+    renderCart();
+    updateCartBadge();
+    return false;
+  }
 }
+
+// Render cart
 function renderCart() {
   const container = document.getElementById("cart-items");
   container.innerHTML = "";
   let total = 0;
-  cart.forEach(item => {
+  cart.forEach((item, index) => {
     total += item.price * item.qty;
-    container.innerHTML += `<div class="cart-item"><span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span></div>`;
+    container.innerHTML += `
+      <div class="cart-item">
+        <span>${item.name}</span>
+        <input type="number" min="1" value="${item.qty}" onchange="updateQuantity(${index}, this.value)">
+        <span>₹${item.price * item.qty}</span>
+        <button onclick="removeFromCart(${index})">❌</button>
+      </div>`;
   });
   document.getElementById("cart-total").innerText = total;
 }
+
+function updateQuantity(index, newQty) {
+  cart[index].qty = parseInt(newQty) || 1;
+  renderCart();
+  updateCartBadge();
+}
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  renderCart();
+  updateCartBadge();
+}
+
 function updateCartBadge() {
   const badge = document.getElementById("cart-badge");
   badge.innerText = cart.reduce((sum, i) => sum + i.qty, 0);
@@ -258,12 +274,12 @@ document.getElementById("cart-icon").addEventListener("click", () => {
   document.getElementById("cart").scrollIntoView({behavior: "smooth"});
 });
 
-// Prevent past dates (unchanged)
+// Prevent past dates
 const dateInput = document.getElementById("cust-date");
 const today = new Date().toISOString().split("T")[0];
 dateInput.setAttribute("min", today);
 
-// Checkout form submit → show confirmation modal (unchanged)
+// Checkout submit
 document.getElementById("checkout-form").addEventListener("submit", e => {
   e.preventDefault();
   const name = document.getElementById("cust-name").value;
@@ -285,104 +301,72 @@ document.getElementById("checkout-form").addEventListener("submit", e => {
   document.getElementById("confirm-details").innerHTML = detailsHTML;
   openModal('confirm-modal');
 });
-// Add this helper function inside your <script> tags
-// This creates a 12-digit, numeric ID, which is the safest format.
-function generateTransactionReference() {
-    // Generates a simple, 12-digit numeric ID for maximum compatibility.
-    // Uses the last 12 digits of the timestamp.
-    return Date.now().toString().slice(-12); 
-}
-// Confirmation → Payment (FIXED: format amount to two decimals and always show QR + UPI intent + fallback)
-// --- Replacement for the existing proceedPayment function ---
+
+// Confirmation → Payment
 function proceedPayment(){
   closeModal('confirm-modal');
-
   const totalRaw = document.getElementById("cart-total").innerText || "0";
   const totalFloat = isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw);
-
   let amountForUpi = Number.isInteger(totalFloat) ? totalFloat.toString() : totalFloat.toFixed(2);
-
   document.getElementById("payment-amount").innerText = totalFloat.toFixed(2);
 
-  // ✅ Simplified UPI link
   const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
-
-  // QR Code
   document.getElementById('qr-code').innerHTML = "";
-  try {
-    QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
-      if (error) {
-        console.error("QR gen error:", error);
-        document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-      }
-    });
-  } catch (err) {
-    console.error("QR exception:", err);
-    document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-  }
-
-  // UPI app link
+  QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
+    if (error) document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
+  });
   const upiLink = document.getElementById("upi-link");
   upiLink.href = upiString;
-  upiLink.setAttribute("target", "_blank"); // better for GPay / PhonePe
-
-  // fallback UPI text
+  upiLink.setAttribute("target", "_blank");
   document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
-
   openModal('payment-modal');
 }
 
-
-// Payment → Generate Receipt (unchanged besides formatting total)
+// Generate receipt
 function generateReceipt(){
   closeModal('payment-modal');
   const name = document.getElementById("cust-name").value;
   const phone = document.getElementById("cust-phone").value;
   const date = document.getElementById("cust-date").value;
   const address = document.getElementById("cust-address").value;
-  const totalRaw = document.getElementById("cart-total").innerText || "0";
-  const formattedTotal = (isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
-
+  const totalRaw = document.getElementById("cart-total").innerText;
   let receiptHTML = `<p><strong>Name:</strong> ${name}</p>`;
   receiptHTML += `<p><strong>Phone:</strong> ${phone}</p>`;
   receiptHTML += `<p><strong>Delivery Date:</strong> ${date}</p>`;
   receiptHTML += `<p><strong>Address:</strong> ${address}</p>`;
   receiptHTML += `<p><strong>Items:</strong><br>`;
-  cart.forEach(i => { receiptHTML += `${i.name} x ${i.qty} @ ₹${i.price} = ₹${(i.qty*i.price).toFixed ? (i.qty*i.price).toFixed(2) : (i.qty*i.price)}<br>`; });
-  receiptHTML += `</p><p><strong>Total Paid:</strong> ₹${formattedTotal}</p>`;
-  receiptHTML += `<p>Paid via GPay/UPI (QR or UPI intent)</p>`;
-
+  cart.forEach(i => { receiptHTML += `${i.name} x ${i.qty} @ ₹${i.price} = ₹${i.qty*i.price}<br>`; });
+  receiptHTML += `</p><p><strong>Total Paid:</strong> ₹${totalRaw}</p>`;
   document.getElementById("receipt").innerHTML = receiptHTML;
   openModal('receipt-modal');
-
   cart = [];
   renderCart();
   updateCartBadge();
-  document.getElementById("checkout-form").reset();
 }
 
-// Share receipt via WhatsApp (unchanged)
+// Share order (WhatsApp)
 function shareOrder(){
-  const text = document.getElementById("receipt").innerText;
-  const waLink = `https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(text)}`;
-  window.open(waLink, "_blank");
+  const receipt = document.getElementById("receipt").innerText;
+  const msg = encodeURIComponent("New Order:\n\n" + receipt);
+  window.open(`https://wa.me/${CONFIG.OWNER_PHONE}?text=${msg}`, "_blank");
+  closeModal('receipt-modal');
 }
 
-// Modal helpers (unchanged)
-function openModal(id){ document.getElementById(id).style.display = "block"; }
-function closeModal(id){ document.getElementById(id).style.display = "none"; }
+// Social sharing
+function shareWA(){
+  const url = encodeURIComponent(window.location.href);
+  window.open("https://wa.me/?text=Check%20out%20this%20menu:%20" + url, "_blank");
+}
+function shareFB(){
+  const url = encodeURIComponent(window.location.href);
+  window.open("https://www.facebook.com/sharer/sharer.php?u=" + url, "_blank");
+}
 
-// Share menu buttons (unchanged)
-function shareWA(){ window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${location.href}`,"_blank"); }
-function shareFB(){ window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`,"_blank"); }
+// Modal helpers
+function openModal(id){ document.getElementById(id).style.display="block"; }
+function closeModal(id){ document.getElementById(id).style.display="none"; }
 
-// Proceed to Confirmation button in cart (unchanged)
-document.getElementById("proceed-confirm").addEventListener("click", ()=>{
-  document.getElementById("checkout").scrollIntoView({behavior:"smooth"});
-});
-
-// initial load
-loadProducts();
+window.onload = loadProducts;
 </script>
 </body>
 </html>
