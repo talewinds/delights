@@ -11,729 +11,360 @@
 <title>Sweets & Snacks Made to Order</title>
 
 <style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#fffaf4; color:#333; }
+  header { background:maroon; color:white; padding:15px; text-align:center; position:relative; }
+  header h1 { margin:0; }
+  header p { margin:5px 0 0; font-size:14px; }
 
-  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#fffaf4; color:#333; }
+  /* Fixed Cart Icon */
+  #cart-icon { position:fixed; top:15px; right:15px; width:40px; height:40px; cursor:pointer; z-index:1000; }
+  #cart-icon svg { width:100%; height:100%; fill:#28a745; }
+  .cart-badge { position:absolute; top:-8px; right:-8px; background:gold; color:black; font-weight:bold; padding:4px 8px; border-radius:50%; font-size:14px; pointer-events:none; }
 
-  header { background:maroon; color:white; padding:15px; text-align:center; position:relative; }
+  /* Products Grid */
+  .products { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:15px; padding:20px; }
+  .card { border:1px solid #ddd; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; }
+  .card img { width:100%; height:150px; object-fit:cover; background:#eee; }
+  .card-content { padding:10px; }
+  .card h3 { margin:5px 0; color:maroon; }
+  .price-row { display:flex; align-items:center; justify-content:space-between; }
+  .price { font-weight:bold; margin:5px 0; }
+  .added-msg { color:green; font-size:13px; margin-left:10px; white-space:nowrap; }
 
-  header h1 { margin:0; }
+  .product-actions { display:flex; align-items:center; margin-top:5px; }
+  .quantity-input { width:60px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align:center; margin-right:8px; }
+  .btn { background:maroon; color:white; border:none; padding:6px 12px; cursor:pointer; border-radius:4px; }
+  .btn:hover { background:#a00000; }
 
-  header p { margin:5px 0 0; font-size:14px; }
+  /* Cart & Checkout */
+  #cart { padding:20px; background:linear-gradient(135deg,#fff5f5,#ffe6e6,#fffaf4); }
+  #cart h2 { color:maroon; }
+  .cart-item { display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding:8px 0; }
+  #checkout { padding:20px; }
+  #checkout h2 { color:maroon; }
+  label { display:block; margin-top:10px; }
+  input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; }
 
+  .share { margin:20px; text-align:center; }
+  .share button { margin:5px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; color:white; }
+  .wa { background:#25D366; }
+  .fb { background:#4267B2; }
 
+  /* Skeleton loading */
+  .skeleton { background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-  /* Fixed Cart Icon */
-
-  #cart-icon { position:fixed; top:15px; right:15px; width:40px; height:40px; cursor:pointer; z-index:1000; }
-
-  #cart-icon svg { width:100%; height:100%; fill:#28a745; }
-
-  .cart-badge { position:absolute; top:-8px; right:-8px; background:gold; color:black; font-weight:bold; padding:4px 8px; border-radius:50%; font-size:14px; pointer-events:none; }
-
-
-
-  /* Products Grid */
-
-  .products { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:15px; padding:20px; }
-
-  .card { border:1px solid #ddd; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; }
-
-  .card img { width:100%; height:150px; object-fit:cover; background:#eee; }
-
-  .card-content { padding:10px; }
-
-  .card h3 { margin:5px 0; color:maroon; }
-
-  .price-row { display:flex; align-items:center; justify-content:space-between; }
-
-  .price { font-weight:bold; margin:5px 0; }
-
-  .added-msg { color:green; font-size:13px; margin-left:10px; white-space:nowrap; }
-
-
-
-  .product-actions { display:flex; align-items:center; margin-top:5px; }
-
-  .quantity-input { width:60px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align:center; margin-right:8px; }
-
-  .btn { background:maroon; color:white; border:none; padding:6px 12px; cursor:pointer; border-radius:4px; }
-
-  .btn:hover { background:#a00000; }
-
-
-
-  /* Cart & Checkout */
-
-  #cart { padding:20px; background:linear-gradient(135deg,#fff5f5,#ffe6e6,#fffaf4); }
-
-  #cart h2 { color:maroon; }
-
-  .cart-item { display:flex; justify-content:space-between; border-bottom:1px solid #ddd; padding:8px 0; }
-
-  #checkout { padding:20px; }
-
-  #checkout h2 { color:maroon; }
-
-  label { display:block; margin-top:10px; }
-
-  input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; }
-
-
-
-  .share { margin:20px; text-align:center; }
-
-  .share button { margin:5px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; color:white; }
-
-  .wa { background:#25D366; }
-
-  .fb { background:#4267B2; }
-
-
-
-  /* Skeleton loading */
-
-  .skeleton { background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-
-  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-
-
-
-  /* Modal */
-
-  .modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); }
-
-  .modal-content { background:#fff; margin:10% auto; padding:20px; border-radius:8px; width:90%; max-width:500px; }
-
-  .modal h3 { margin-top:0; color:maroon; }
-
-  .close { color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer; }
-
-  .close:hover { color:black; }
-
-  #qr-code { text-align:center; margin:15px 0; }
-
-  #receipt { background:#fffafa; padding:10px; border:1px solid #ddd; border-radius:6px; }
-
-  .upi-fallback { text-align:center; margin-top:8px; font-weight:600; }
-
+  /* Modal */
+  .modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); }
+  .modal-content { background:#fff; margin:10% auto; padding:20px; border-radius:8px; width:90%; max-width:500px; }
+  .modal h3 { margin-top:0; color:maroon; }
+  .close { color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer; }
+  .close:hover { color:black; }
+  #qr-code { text-align:center; margin:15px 0; }
+  #receipt { background:#fffafa; padding:10px; border:1px solid #ddd; border-radius:6px; }
+  .upi-fallback { text-align:center; margin-top:8px; font-weight:600; }
 </style>
 
 </head>
 
 <body>
 
-
-
 <header>
-
-  <h1>delights</h1>
-
-  <p>Made fresh on order – home made - Taste of Tradition</p>
-
+  <h1>delights</h1>
+  <p>Made fresh on order – home made - Taste of Tradition</p>
 </header>
 
-
-
 <div id="cart-icon">
-
-  <svg viewBox="0 0 24 24" width="40" height="40">
-
-    <path fill="#28a745" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 
-
-    0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7.16 14.26l.84-1.66h8.97c.75 
-
-    0 1.41-.41 1.75-1.03l3.58-6.49-.03-.02a1 1 0 0 0-.88-.48H5.21l-.94-2H0v2h2l3.6 
-
-    7.59-1.35 2.44c-.18.32-.25.69-.19 1.05.1.56.58.97 1.14.97h12v-2H7.16z"/>
-
-  </svg>
-
-  <div id="cart-badge" class="cart-badge">0</div>
-
+  <svg viewBox="0 0 24 24" width="40" height="40">
+    <path fill="#28a745" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 
+    0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7.16 14.26l.84-1.66h8.97c.75 
+    0 1.41-.41 1.75-1.03l3.58-6.49-.03-.02a1 1 0 0 0-.88-.48H5.21l-.94-2H0v2h2l3.6 
+    7.59-1.35 2.44c-.18.32-.25.69-.19 1.05.1.56.58.97 1.14.97h12v-2H7.16z"/>
+  </svg>
+  <div id="cart-badge" class="cart-badge">0</div>
 </div>
-
-
 
 <section id="products" class="products">
-
-  <div class="card skeleton"><div style="height:150px;"></div><div class="card-content"><h3 style="height:20px;width:70%;"></h3><p style="height:15px;width:90%;"></p><p style="height:15px;width:50%;"></p><button class="btn" style="opacity:0"></button></div></div>
-
+  <div class="card skeleton"><div style="height:150px;"></div><div class="card-content"><h3 style="height:20px;width:70%;"></h3><p style="height:15px;width:90%;"></p><p style="height:15px;width:50%;"></p><button class="btn" style="opacity:0"></button></div></div>
 </section>
-
-
 
 <section id="cart">
-
-  <h2>🛒 Your Cart</h2>
-
-  <div id="cart-items"></div>
-
-  <p><strong>Total:</strong> ₹<span id="cart-total">0</span></p>
-
-  <button id="proceed-confirm" class="btn">Proceed to Confirmation</button>
-
+  <h2>🛒 Your Cart</h2>
+  <div id="cart-items"></div>
+  <p><strong>Total:</strong> ₹<span id="cart-total">0</span></p>
+  <button id="proceed-confirm" class="btn">Proceed to Confirmation</button>
 </section>
-
-
 
 <section id="checkout">
-
-  <h2>Checkout</h2>
-
-  <form id="checkout-form">
-
-    <label>Name <input type="text" id="cust-name" required></label>
-
-    <label>Phone <input type="text" id="cust-phone" required></label>
-
-    <label>Delivery Date <input type="date" id="cust-date" required></label>
-
-    <label>Address <textarea id="cust-address"></textarea></label>
-
-    <p><strong>Pay Advance via GPay:</strong><br>UPI ID: <span id="upi-id"></span></p>
-
-    <button type="submit" class="btn">Confirm Order</button>
-
-  </form>
-
+  <h2>Checkout</h2>
+  <form id="checkout-form">
+    <label>Name <input type="text" id="cust-name" required></label>
+    <label>Phone <input type="text" id="cust-phone" required></label>
+    <label>Delivery Date <input type="date" id="cust-date" required></label>
+    <label>Address <textarea id="cust-address"></textarea></label>
+    <p><strong>Pay Advance via GPay:</strong><br>UPI ID: <span id="upi-id"></span></p>
+    <button type="submit" class="btn">Confirm Order</button>
+  </form>
 </section>
 
-
-
 <div class="share">
-
-  <p>Share this menu:</p>
-
-  <button class="wa" onclick="shareWA()">WhatsApp</button>
-
-  <button class="fb" onclick="shareFB()">Facebook</button>
-
+  <p>Share this menu:</p>
+  <button class="wa" onclick="shareWA()">WhatsApp</button>
+  <button class="fb" onclick="shareFB()">Facebook</button>
 </div>
-
-
 
 <!-- Confirmation Modal -->
-
 <div id="confirm-modal" class="modal">
-
-  <div class="modal-content">
-
-    <span class="close" onclick="closeModal('confirm-modal')">&times;</span>
-
-    <h3>Order Confirmation</h3>
-
-    <div id="confirm-details"></div>
-
-    <button class="btn" onclick="proceedPayment()">Proceed to Payment</button>
-
-  </div>
-
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('confirm-modal')">&times;</span>
+    <h3>Order Confirmation</h3>
+    <div id="confirm-details"></div>
+    <button class="btn" onclick="proceedPayment()">Proceed to Payment</button>
+  </div>
 </div>
-
-
 
 <!-- Payment Modal -->
-
 <div id="payment-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('payment-modal')">&times;</span>
+    <h3>Pay via UPI / QR Code</h3>
+    <div id="qr-code"></div>
+    <p>Total Amount: ₹<span id="payment-amount"></span></p>
 
-  <div class="modal-content">
+    <!-- UPI app link (will open UPI apps when tapped on mobile) -->
+    <a id="upi-link" class="btn" style="display:block;text-align:center;margin-top:10px;">Pay via GPay / UPI App</a>
 
-    <span class="close" onclick="closeModal('payment-modal')">&times;</span>
+    <!-- Manual fallback always visible -->
+    <p class="upi-fallback">Or pay manually using UPI ID: <span id="upi-text" style="font-weight:700"></span></p>
 
-    <h3>Pay via UPI / QR Code</h3>
-
-    <div id="qr-code"></div>
-
-    <p>Total Amount: ₹<span id="payment-amount"></span></p>
-
-
-
-    <!-- UPI app link (will open UPI apps when tapped on mobile) -->
-
-    <a id="upi-link" class="btn" style="display:block;text-align:center;margin-top:10px;">Pay via GPay / UPI App</a>
-
-
-
-    <!-- Manual fallback always visible -->
-
-    <p class="upi-fallback">Or pay manually using UPI ID: <span id="upi-text" style="font-weight:700"></span></p>
-
-
-
-    <button class="btn" onclick="generateReceipt()" style="margin-top:10px;">I've Paid</button>
-
-  </div>
-
+    <button class="btn" onclick="generateReceipt()" style="margin-top:10px;">I've Paid</button>
+  </div>
 </div>
-
-
 
 <!-- Receipt Modal -->
-
 <div id="receipt-modal" class="modal">
-
-  <div class="modal-content">
-
-    <span class="close" onclick="closeModal('receipt-modal')">&times;</span>
-
-    <h3>Your Order Receipt</h3>
-
-    <div id="receipt"></div>
-
-    <button class="btn" onclick="shareOrder()">Share via WhatsApp</button>
-
-  </div>
-
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('receipt-modal')">&times;</span>
+    <h3>Your Order Receipt</h3>
+    <div id="receipt"></div>
+    <button class="btn" onclick="shareOrder()">Share via WhatsApp</button>
+  </div>
 </div>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-
 <script>
-
 const CONFIG = {
-
-  OWNER_PHONE: "919447577561",
-
-  UPI_ID: "hariharmia1@okicici",
-
-  SHEET_PRODUCTS_URL: "https://script.google.com/macros/s/AKfycbwJx535jhdv70wneiEj5qZSPqvOHJpP2B-t7hXK0RgaM1K7a_5uAiWz3OL6ETt1rYhwPg/exec"
-
+  OWNER_PHONE: "919447577561",
+  UPI_ID: "hariharmia1@okicici",
+  SHEET_PRODUCTS_URL: "https://script.google.com/macros/s/AKfycbwJx535jhdv70wneiEj5qZSPqvOHJpP2B-t7hXK0RgaM1K7a_5uAiWz3OL6ETt1rYhwPg/exec"
 };
 
-
-
 document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
-
 document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
-
-
 
 let cart = [];
 
-
-
 // Load products from Google Sheet (unchanged)
-
 function loadProducts() {
-
-  fetch(CONFIG.SHEET_PRODUCTS_URL)
-
-    .then(res => res.json())
-
-    .then(data => {
-
-      const container = document.getElementById("products");
-
-      container.innerHTML = "";
-
-      data.forEach(item => {
-
-        const card = document.createElement("div");
-
-        card.className = "card";
-
-
-
-        const img = document.createElement("img");
-
-        img.src = item.image_url || item.image || "https://via.placeholder.com/150";
-
-        img.alt = item.name;
-
-
-
-        const content = document.createElement("div");
-
-        content.className = "card-content";
-
-
-
-        const h3 = document.createElement("h3");
-
-        h3.innerText = item.name;
-
-
-
-        const desc = document.createElement("p");
-
-        desc.innerText = item.description || item.desc || "";
-
-
-
-        const priceRow = document.createElement("div");
-
-        priceRow.className = "price-row";
-
-        const price = document.createElement("span");
-
-        price.className = "price";
-
-        price.innerText = "₹" + item.price;
-
-        const addedMsg = document.createElement("span");
-
-        addedMsg.className = "added-msg";
-
-        priceRow.appendChild(price);
-
-        priceRow.appendChild(addedMsg);
-
-
-
-        const actions = document.createElement("div");
-
-        actions.className = "product-actions";
-
-
-
-        const qtyInput = document.createElement("input");
-
-        qtyInput.type = "number";
-
-        qtyInput.min = "1";
-
-        qtyInput.value = "1";
-
-        qtyInput.className = "quantity-input";
-
-
-
-        const btn = document.createElement("button");
-
-        btn.className = "btn";
-
-        btn.innerText = "Add";
-
-
-
-        btn.addEventListener("click", () => {
-
-          let qty = parseInt(qtyInput.value) || 1;
-
-          addToCart(item.name, Number(item.price), qty);
-
-          addedMsg.innerText = `${qty} units added to cart`;
-
-          setTimeout(() => { addedMsg.innerText=""; }, 1500);
-
-        });
-
-
-
-        actions.appendChild(qtyInput);
-
-        actions.appendChild(btn);
-
-
-
-        content.appendChild(h3);
-
-        content.appendChild(desc);
-
-        content.appendChild(priceRow);
-
-        content.appendChild(actions);
-
-
-
-        card.appendChild(img);
-
-        card.appendChild(content);
-
-        container.appendChild(card);
-
-      });
-
-    })
-
-    .catch(err => console.error("Failed to load products:", err));
-
+  fetch(CONFIG.SHEET_PRODUCTS_URL)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+      data.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = item.image_url || item.image || "https://via.placeholder.com/150";
+        img.alt = item.name;
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const h3 = document.createElement("h3");
+        h3.innerText = item.name;
+
+        const desc = document.createElement("p");
+        desc.innerText = item.description || item.desc || "";
+
+        const priceRow = document.createElement("div");
+        priceRow.className = "price-row";
+        const price = document.createElement("span");
+        price.className = "price";
+        price.innerText = "₹" + item.price;
+        const addedMsg = document.createElement("span");
+        addedMsg.className = "added-msg";
+        priceRow.appendChild(price);
+        priceRow.appendChild(addedMsg);
+
+        const actions = document.createElement("div");
+        actions.className = "product-actions";
+
+        const qtyInput = document.createElement("input");
+        qtyInput.type = "number";
+        qtyInput.min = "1";
+        qtyInput.value = "1";
+        qtyInput.className = "quantity-input";
+
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.innerText = "Add";
+
+        btn.addEventListener("click", () => {
+          let qty = parseInt(qtyInput.value) || 1;
+          addToCart(item.name, Number(item.price), qty);
+          addedMsg.innerText = `${qty} units added to cart`;
+          setTimeout(() => { addedMsg.innerText=""; }, 1500);
+        });
+
+        actions.appendChild(qtyInput);
+        actions.appendChild(btn);
+
+        content.appendChild(h3);
+        content.appendChild(desc);
+        content.appendChild(priceRow);
+        content.appendChild(actions);
+
+        card.appendChild(img);
+        card.appendChild(content);
+        container.appendChild(card);
+      });
+    })
+    .catch(err => console.error("Failed to load products:", err));
 }
-
-
 
 // Cart functions (unchanged)
-
 function addToCart(name, price, qty) {
-
-  const existing = cart.find(i => i.name === name);
-
-  if (existing) existing.qty += qty; else cart.push({name, price, qty});
-
-  renderCart(); updateCartBadge();
-
+  const existing = cart.find(i => i.name === name);
+  if (existing) existing.qty += qty; else cart.push({name, price, qty});
+  renderCart(); updateCartBadge();
 }
-
 function renderCart() {
-
-  const container = document.getElementById("cart-items");
-
-  container.innerHTML = "";
-
-  let total = 0;
-
-  cart.forEach(item => {
-
-    total += item.price * item.qty;
-
-    container.innerHTML += `<div class="cart-item"><span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span></div>`;
-
-  });
-
-  document.getElementById("cart-total").innerText = total;
-
+  const container = document.getElementById("cart-items");
+  container.innerHTML = "";
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.qty;
+    container.innerHTML += `<div class="cart-item"><span>${item.name} x ${item.qty}</span><span>₹${item.price*item.qty}</span></div>`;
+  });
+  document.getElementById("cart-total").innerText = total;
 }
-
 function updateCartBadge() {
-
-  const badge = document.getElementById("cart-badge");
-
-  badge.innerText = cart.reduce((sum, i) => sum + i.qty, 0);
-
+  const badge = document.getElementById("cart-badge");
+  badge.innerText = cart.reduce((sum, i) => sum + i.qty, 0);
 }
-
 document.getElementById("cart-icon").addEventListener("click", () => {
-
-  document.getElementById("cart").scrollIntoView({behavior: "smooth"});
-
+  document.getElementById("cart").scrollIntoView({behavior: "smooth"});
 });
-
-
 
 // Prevent past dates (unchanged)
-
 const dateInput = document.getElementById("cust-date");
-
 const today = new Date().toISOString().split("T")[0];
-
 dateInput.setAttribute("min", today);
 
-
-
 // Checkout form submit → show confirmation modal (unchanged)
-
 document.getElementById("checkout-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = document.getElementById("cust-name").value;
+  const phone = document.getElementById("cust-phone").value;
+  const date = document.getElementById("cust-date").value;
+  const address = document.getElementById("cust-address").value;
+  const total = document.getElementById("cart-total").innerText;
 
-  e.preventDefault();
+  if (cart.length === 0) { alert("Cart is empty!"); return; }
 
-  const name = document.getElementById("cust-name").value;
+  let detailsHTML = `<p><strong>Name:</strong> ${name}</p>`;
+  detailsHTML += `<p><strong>Phone:</strong> ${phone}</p>`;
+  detailsHTML += `<p><strong>Delivery Date:</strong> ${date}</p>`;
+  detailsHTML += `<p><strong>Address:</strong> ${address}</p>`;
+  detailsHTML += `<p><strong>Items:</strong><br>`;
+  cart.forEach(i => { detailsHTML += `${i.name} x ${i.qty} @ ₹${i.price} = ₹${i.qty*i.price}<br>`; });
+  detailsHTML += `</p><p><strong>Total:</strong> ₹${total}</p>`;
 
-  const phone = document.getElementById("cust-phone").value;
-
-  const date = document.getElementById("cust-date").value;
-
-  const address = document.getElementById("cust-address").value;
-
-  const total = document.getElementById("cart-total").innerText;
-
-
-
-  if (cart.length === 0) { alert("Cart is empty!"); return; }
-
-
-
-  let detailsHTML = `<p><strong>Name:</strong> ${name}</p>`;
-
-  detailsHTML += `<p><strong>Phone:</strong> ${phone}</p>`;
-
-  detailsHTML += `<p><strong>Delivery Date:</strong> ${date}</p>`;
-
-  detailsHTML += `<p><strong>Address:</strong> ${address}</p>`;
-
-  detailsHTML += `<p><strong>Items:</strong><br>`;
-
-  cart.forEach(i => { detailsHTML += `${i.name} x ${i.qty} @ ₹${i.price} = ₹${i.qty*i.price}<br>`; });
-
-  detailsHTML += `</p><p><strong>Total:</strong> ₹${total}</p>`;
-
-
-
-  document.getElementById("confirm-details").innerHTML = detailsHTML;
-
-  openModal('confirm-modal');
-
+  document.getElementById("confirm-details").innerHTML = detailsHTML;
+  openModal('confirm-modal');
 });
-
-
 
 // Confirmation → Payment (FIXED: format amount to two decimals and always show QR + UPI intent + fallback)
-
 function proceedPayment(){
+  closeModal('confirm-modal');
+  const totalRaw = document.getElementById("cart-total").innerText || "0";
+  const formattedTotal = (isNa(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
+  document.getElementById("payment-amount").innerText = formattedTotal;
 
-  closeModal('confirm-modal');
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('vidhyaharihar')}&mc=0000&tid=${Date.now()}&tr=${Date.now()}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(formattedTotal)}&cu=INR`;
+  try {
+    QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
+      if (error) {
+        console.error("QR gen error:", error);
+        document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
+      }
+    });
+  } catch (err) {
+    console.error("QR exception:", err);
+    document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
+  }
 
-  const totalRaw = document.getElementById("cart-total").innerText || "0";
+  const upiLink = document.getElementById("upi-link");
+  upiLink.href = upiString;
+  upiLink.setAttribute("target", "_self");
 
-  // ensure numeric -> format with two decimals
+  document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
 
-  const formattedTotal = (isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
-
-  document.getElementById("payment-amount").innerText = formattedTotal;
-
-
-
-  // build UPI intent with two-decimal amount
-
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('vidhyaharihar')}&mc=0000&tid=${Date.now()}&tr=${Date.now()}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(formattedTotal)}&cu=INR`;
-
-  // generate QR (keeps existing behavior)
-
-  try {
-
-    QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
-
-      if (error) {
-
-        console.error("QR gen error:", error);
-
-        // if QR generation fails, clear container and show fallback text (but we always show manual UPI below)
-
-        document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-
-      }
-
-    });
-
-  } catch (err) {
-
-    console.error("QR exception:", err);
-
-    document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-
-  }
-
-
-
-  // set up the UPI app link (intent). Using upi://pay should invoke installed UPI apps on mobile.
-
-  const upiLink = document.getElementById("upi-link");
-
-  upiLink.href = upiString;
-
-  // open in same context to let mobile try to open UPI app; still works from desktop for apps that register the scheme.
-
-  upiLink.setAttribute("target", "_self");
-
-
-
-  // ensure manual UPI ID displayed (always present)
-
-  document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
-
-
-
-  openModal('payment-modal');
-
+  openModal('payment-modal');
 }
-
-
 
 // Payment → Generate Receipt (unchanged besides formatting total)
-
 function generateReceipt(){
+  closeModal('payment-modal');
+  const name = document.getElementById("cust-name").value;
+  const phone = document.getElementById("cust-phone").value;
+  const date = document.getElementById("cust-date").value;
+  const address = document.getElementById("cust-address").value;
+  const totalRaw = document.getElementById("cart-total").innerText || "0";
+  const formattedTotal = (isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
 
-  closeModal('payment-modal');
+  let receiptHTML = `<p><strong>Name:</strong> ${name}</p>`;
+  receiptHTML += `<p><strong>Phone:</strong> ${phone}</p>`;
+  receiptHTML += `<p><strong>Delivery Date:</strong> ${date}</p>`;
+  receiptHTML += `<p><strong>Address:</strong> ${address}</p>`;
+  receiptHTML += `<p><strong>Items:</strong><br>`;
+  cart.forEach(i => { receiptHTML += `${i.name} x ${i.qty} @ ₹${i.price} = ₹${(i.qty*i.price).toFixed ? (i.qty*i.price).toFixed(2) : (i.qty*i.price)}<br>`; });
+  receiptHTML += `</p><p><strong>Total Paid:</strong> ₹${formattedTotal}</p>`;
+  receiptHTML += `<p>Paid via GPay/UPI (QR or UPI intent)</p>`;
 
-  const name = document.getElementById("cust-name").value;
+  document.getElementById("receipt").innerHTML = receiptHTML;
+  openModal('receipt-modal');
 
-  const phone = document.getElementById("cust-phone").value;
-
-  const date = document.getElementById("cust-date").value;
-
-  const address = document.getElementById("cust-address").value;
-
-  const totalRaw = document.getElementById("cart-total").innerText || "0";
-
-  const formattedTotal = (isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
-
-
-
-  let receiptHTML = `<p><strong>Name:</strong> ${name}</p>`;
-
-  receiptHTML += `<p><strong>Phone:</strong> ${phone}</p>`;
-
-  receiptHTML += `<p><strong>Delivery Date:</strong> ${date}</p>`;
-
-  receiptHTML += `<p><strong>Address:</strong> ${address}</p>`;
-
-  receiptHTML += `<p><strong>Items:</strong><br>`;
-
-  cart.forEach(i => { receiptHTML += `${i.name} x ${i.qty} @ ₹${i.price} = ₹${(i.qty*i.price).toFixed ? (i.qty*i.price).toFixed(2) : (i.qty*i.price)}<br>`; });
-
-  receiptHTML += `</p><p><strong>Total Paid:</strong> ₹${formattedTotal}</p>`;
-
-  receiptHTML += `<p>Paid via GPay/UPI (QR or UPI intent)</p>`;
-
-
-
-  document.getElementById("receipt").innerHTML = receiptHTML;
-
-  openModal('receipt-modal');
-
-
-
-  // clear cart as before
-
-  cart = [];
-
-  renderCart();
-
-  updateCartBadge();
-
-  document.getElementById("checkout-form").reset();
-
+  cart = [];
+  renderCart();
+  updateCartBadge();
+  document.getElementById("checkout-form").reset();
 }
-
-
 
 // Share receipt via WhatsApp (unchanged)
-
 function shareOrder(){
-
-  const text = document.getElementById("receipt").innerText;
-
-  const waLink = `https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(text)}`;
-
-  window.open(waLink, "_blank");
-
+  const text = document.getElementById("receipt").innerText;
+  const waLink = `https://wa.me/${CONFIG.OWNER_PHONE}?text=${encodeURIComponent(text)}`;
+  window.open(waLink, "_blank");
 }
 
-
-
 // Modal helpers (unchanged)
-
 function openModal(id){ document.getElementById(id).style.display = "block"; }
-
 function closeModal(id){ document.getElementById(id).style.display = "none"; }
 
-
-
 // Share menu buttons (unchanged)
-
 function shareWA(){ window.open(`https://wa.me/?text=Check out homemade sweets & snacks! ${location.href}`,"_blank"); }
-
 function shareFB(){ window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(location.href)}`,"_blank"); }
 
-
-
 // Proceed to Confirmation button in cart (unchanged)
-
 document.getElementById("proceed-confirm").addEventListener("click", ()=>{
-
-  document.getElementById("checkout").scrollIntoView({behavior:"smooth"});
-
+  document.getElementById("checkout").scrollIntoView({behavior:"smooth"});
 });
 
-
-
 // initial load
-
 loadProducts();
-
 </script>
-
 </body>
-
 </html>
