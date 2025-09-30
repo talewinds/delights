@@ -295,52 +295,43 @@ function generateTransactionReference() {
 // Confirmation → Payment (FIXED: format amount to two decimals and always show QR + UPI intent + fallback)
 // --- Replacement for the existing proceedPayment function ---
 function proceedPayment(){
-  closeModal('confirm-modal');
-  
-  const totalRaw = document.getElementById("cart-total").innerText || "0";
-  const totalFloat = isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw);
+  closeModal('confirm-modal');
 
-  let amountForUpi;
-  // 1. Format amount: use integer for UPI intent if whole number (resolves "payment exceeds limit")
-  if (Number.isInteger(totalFloat)) {
-    amountForUpi = totalFloat.toString();
-  } else {
-    amountForUpi = totalFloat.toFixed(2);
-  }
-  
-  // Display the two-decimal total in the modal for the user
-  document.getElementById("payment-amount").innerText = totalFloat.toFixed(2);
+  const totalRaw = document.getElementById("cart-total").innerText || "0";
+  const totalFloat = isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw);
 
-  // 2. Generate unique and valid Transaction Reference (tr) (resolves "technical error")
-  const transactionReference = generateTransactionReference();
-  
-  // *** CRITICAL FIX HERE: Using CONFIG.UPI_NAME for the Payee Name (pn) ***
-  // Removed the &tn=... parameter for maximum compatibility.
-const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&tid=${transactionReference}&tr=${transactionReference}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
-  // generate QR
-  document.getElementById('qr-code').innerHTML = ""; // Clear previous QR
-  try {
-    QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
-      if (error) {
-        console.error("QR gen error:", error);
-        document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-      }
-    });
-  } catch (err) {
-    console.error("QR exception:", err);
-    document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-  }
+  let amountForUpi = Number.isInteger(totalFloat) ? totalFloat.toString() : totalFloat.toFixed(2);
 
-  // set up the UPI app link (intent)
-  const upiLink = document.getElementById("upi-link");
-  upiLink.href = upiString;
-  upiLink.setAttribute("target", "_self"); // Using _self can sometimes encourage app switch better than _blank
-  
-  // ensure manual UPI ID displayed
-  document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
+  document.getElementById("payment-amount").innerText = totalFloat.toFixed(2);
 
-  openModal('payment-modal');
+  // ✅ Simplified UPI link
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
+
+  // QR Code
+  document.getElementById('qr-code').innerHTML = "";
+  try {
+    QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
+      if (error) {
+        console.error("QR gen error:", error);
+        document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
+      }
+    });
+  } catch (err) {
+    console.error("QR exception:", err);
+    document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
+  }
+
+  // UPI app link
+  const upiLink = document.getElementById("upi-link");
+  upiLink.href = upiString;
+  upiLink.setAttribute("target", "_blank"); // better for GPay / PhonePe
+
+  // fallback UPI text
+  document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
+
+  openModal('payment-modal');
 }
+
 
 // Payment → Generate Receipt (unchanged besides formatting total)
 function generateReceipt(){
