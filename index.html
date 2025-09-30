@@ -285,35 +285,60 @@ document.getElementById("checkout-form").addEventListener("submit", e => {
   document.getElementById("confirm-details").innerHTML = detailsHTML;
   openModal('confirm-modal');
 });
-
+// Add this helper function inside your <script> tags
+function generateTransactionReference() {
+    // Generates a safer, shorter, alphanumeric ID for TR (Transaction Reference).
+    // DL for Delights + last 10 digits of timestamp
+    return 'DL' + Date.now().toString().slice(-10); 
+}
 // Confirmation → Payment (FIXED: format amount to two decimals and always show QR + UPI intent + fallback)
+// --- Replacement for the existing proceedPayment function ---
 function proceedPayment(){
-  closeModal('confirm-modal');
-  const totalRaw = document.getElementById("cart-total").innerText.replace(/,/g,'') || "0";
-  const formattedTotal = (isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
-  document.getElementById("payment-amount").innerText = formattedTotal;
+  closeModal('confirm-modal');
+  
+  const totalRaw = document.getElementById("cart-total").innerText || "0";
+  const totalFloat = isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw);
 
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('vidhyaharihar')}&mc=0000&tid=${Date.now()}&tr=${Date.now()}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(formattedTotal)}&cu=INR`;
+  let amountForUpi;
+  // 1. Format amount: use integer for UPI intent if whole number (resolves "payment exceeds limit")
+  if (Number.isInteger(totalFloat)) {
+    amountForUpi = totalFloat.toString();
+  } else {
+    amountForUpi = totalFloat.toFixed(2);
+  }
+  
+  // Display the two-decimal total in the modal for the user
+  document.getElementById("payment-amount").innerText = totalFloat.toFixed(2);
 
-  document.getElementById('qr-code').innerHTML = "";
-  try {
-    QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
-      if (error) {
-        console.error("QR gen error:", error);
-        document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-      }
-    });
-  } catch (err) {
-    console.error("QR exception:", err);
-    document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
-  }
+  // 2. Generate unique and valid Transaction Reference (tr) (resolves "technical error")
+  const transactionReference = generateTransactionReference();
+  
+  // build UPI intent using the adjusted parameters. Note: pn is changed to 'delights' for brevity.
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('delights')}&mc=0000&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
+  
+  // generate QR
+  document.getElementById('qr-code').innerHTML = ""; // Clear previous QR
+  try {
+    QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
+      if (error) {
+        console.error("QR gen error:", error);
+        document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
+      }
+    });
+  } catch (err) {
+    console.error("QR exception:", err);
+    document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
+  }
 
-  const upiLink = document.getElementById("upi-link");
-  upiLink.href = upiString;
-  upiLink.setAttribute("target", "_blank"); // use blank for mobile apps
-  document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
+  // set up the UPI app link (intent)
+  const upiLink = document.getElementById("upi-link");
+  upiLink.href = upiString;
+  upiLink.setAttribute("target", "_self"); // Using _self can sometimes encourage app switch better than _blank
+  
+  // ensure manual UPI ID displayed
+  document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
 
-  openModal('payment-modal');
+  openModal('payment-modal');
 }
 
 // Payment → Generate Receipt (unchanged besides formatting total)
