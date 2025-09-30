@@ -287,7 +287,7 @@ function proceedPayment(){
   document.getElementById("payment-amount").innerText = formattedTotal;
 
   // build UPI intent with two-decimal amount
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('Delights')}&am=${encodeURIComponent(formattedTotal)}&cu=INR`;
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('vidhyaharihar')}&am=${encodeURIComponent(formattedTotal)}&cu=INR`;
 
   // generate QR (keeps existing behavior)
   try {
