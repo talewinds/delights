@@ -148,6 +148,7 @@ const CONFIG = {
   UPI_ID: "lakshman.siyer-3@okaxis",
   UPI_NAME: "Lakshmanan",
   SHEET_PRODUCTS_URL: "https://script.google.com/macros/s/AKfycbwJx535jhdv70wneiEj5qZSPqvOHJpP2B-t7hXK0RgaM1K7a_5uAiWz3OL6ETt1rYhwPg/exec"
+ORDER_SHEET_URL: "https://script.google.com/macros/s/AKfycbx2JiQ83S6xHZQg2KKETYT59FVkfQEGx2BPYSgKGF93UZMDEi63XP40-n39C_aSYXwD2A/exec"  // <<< Add this
 };
 
 document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
@@ -329,20 +330,45 @@ function generateReceipt(){
   const phone = document.getElementById("cust-phone").value;
   const date = document.getElementById("cust-date").value;
   const address = document.getElementById("cust-address").value;
-  const totalRaw = document.getElementById("cart-total").innerText;
+  const totalRaw = document.getElementById("cart-total").innerText || "0";
+  const formattedTotal = (isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
+
+  let itemsText = cart.map(i => `${i.name} x ${i.qty} = ₹${(i.qty*i.price).toFixed(2)}`).join("; ");
+
+  // ✅ Send order to Google Sheet
+  fetch(CONFIG.ORDER_SHEET_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      name: name,
+      phone: phone,
+      date: date,
+      address: address,
+      items: itemsText,
+      total: formattedTotal
+    }),
+    headers: { "Content-Type": "application/json" }
+  }).then(res => res.json())
+    .then(resp => console.log("Order sent to Sheet:", resp))
+    .catch(err => console.error("Failed to send order:", err));
+
+  // --- existing receipt code ---
   let receiptHTML = `<p><strong>Name:</strong> ${name}</p>`;
   receiptHTML += `<p><strong>Phone:</strong> ${phone}</p>`;
   receiptHTML += `<p><strong>Delivery Date:</strong> ${date}</p>`;
   receiptHTML += `<p><strong>Address:</strong> ${address}</p>`;
-  receiptHTML += `<p><strong>Items:</strong><br>`;
-  cart.forEach(i => { receiptHTML += `${i.name} x ${i.qty} @ ₹${i.price} = ₹${i.qty*i.price}<br>`; });
-  receiptHTML += `</p><p><strong>Total Paid:</strong> ₹${totalRaw}</p>`;
+  receiptHTML += `<p><strong>Items:</strong><br>` + itemsText.replace(/;/g,"<br>") + `</p>`;
+  receiptHTML += `<p><strong>Total Paid:</strong> ₹${formattedTotal}</p>`;
+  receiptHTML += `<p>Paid via GPay/UPI (QR or UPI intent)</p>`;
+
   document.getElementById("receipt").innerHTML = receiptHTML;
   openModal('receipt-modal');
+
   cart = [];
   renderCart();
   updateCartBadge();
+  document.getElementById("checkout-form").reset();
 }
+
 
 // Share order (WhatsApp)
 function shareOrder(){
