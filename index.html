@@ -314,7 +314,7 @@ function proceedPayment(){
   const transactionReference = generateTransactionReference();
   
   // build UPI intent using the adjusted parameters. Note: pn is changed to 'delights' for brevity.
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('delights')}&mc=0000&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('vidhyaharihar')}&mc=0000&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
   
   // generate QR
   document.getElementById('qr-code').innerHTML = ""; // Clear previous QR
