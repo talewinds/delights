@@ -155,7 +155,7 @@
 const CONFIG = {
   OWNER_PHONE: "919447577561",
   UPI_ID: "hariharmia1-1@okaxis",
-  UPI_NAME: "vidhyaharihar",
+  UPI_NAME: "VIDHYAHARIHAR",
   SHEET_PRODUCTS_URL: "https://script.google.com/macros/s/AKfycbwJx535jhdv70wneiEj5qZSPqvOHJpP2B-t7hXK0RgaM1K7a_5uAiWz3OL6ETt1rYhwPg/exec"
 };
 
@@ -314,7 +314,7 @@ function proceedPayment(){
   const transactionReference = generateTransactionReference();
   
   // *** CRITICAL FIX HERE: Using CONFIG.UPI_NAME for the Payee Name (pn) ***
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&mc=0000&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
   
   // generate QR
   document.getElementById('qr-code').innerHTML = ""; // Clear previous QR
