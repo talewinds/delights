@@ -290,7 +290,7 @@ document.getElementById("checkout-form").addEventListener("submit", e => {
 function proceedPayment(){
   closeModal('confirm-modal');
   const totalRaw = document.getElementById("cart-total").innerText || "0";
-  const formattedTotal = (isNa(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
+  const formattedTotal = (isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw)).toFixed(2);
   document.getElementById("payment-amount").innerText = formattedTotal;
 
   const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('vidhyaharihar')}&mc=0000&tid=${Date.now()}&tr=${Date.now()}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(formattedTotal)}&cu=INR`;
@@ -308,7 +308,7 @@ function proceedPayment(){
 
   const upiLink = document.getElementById("upi-link");
   upiLink.href = upiString;
-  upiLink.setAttribute("target", "_self");
+  upiLink.setAttribute("target", "_blank");
 
   document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
 
