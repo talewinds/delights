@@ -286,10 +286,11 @@ document.getElementById("checkout-form").addEventListener("submit", e => {
   openModal('confirm-modal');
 });
 // Add this helper function inside your <script> tags
+// This creates a 12-digit, numeric ID, which is the safest format.
 function generateTransactionReference() {
-    // Generates a safer, shorter, alphanumeric ID for TR (Transaction Reference).
-    // DL for Delights + last 10 digits of timestamp
-    return 'DL' + Date.now().toString().slice(-10); 
+    // Generates a simple, 12-digit numeric ID for maximum compatibility.
+    // Uses the last 12 digits of the timestamp.
+    return Date.now().toString().slice(-12); 
 }
 // Confirmation → Payment (FIXED: format amount to two decimals and always show QR + UPI intent + fallback)
 // --- Replacement for the existing proceedPayment function ---
@@ -314,8 +315,8 @@ function proceedPayment(){
   const transactionReference = generateTransactionReference();
   
   // *** CRITICAL FIX HERE: Using CONFIG.UPI_NAME for the Payee Name (pn) ***
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
-  
+  // Removed the &tn=... parameter for maximum compatibility.
+const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&tid=${transactionReference}&tr=${transactionReference}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
   // generate QR
   document.getElementById('qr-code').innerHTML = ""; // Clear previous QR
   try {
