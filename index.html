@@ -121,6 +121,7 @@
     <h3>Pay via UPI / QR Code</h3>
     <div id="qr-code"></div>
     <p>Total Amount: ₹<span id="payment-amount"></span></p>
+    <!-- Fixed UPI Link -->
     <a id="upi-link" class="btn" style="display:block;text-align:center;margin-top:10px;">Pay via GPay / UPI App</a>
     <button class="btn" onclick="generateReceipt()" style="margin-top:10px;">I've Paid</button>
   </div>
@@ -207,10 +208,15 @@ function proceedPayment(){
   closeModal('confirm-modal');
   const total=document.getElementById("cart-total").innerText;
   document.getElementById("payment-amount").innerText=total;
+
+  // Correct UPI intent
   const upiString=`upi://pay?pa=${CONFIG.UPI_ID}&pn=Delights&am=${total}&cu=INR`;
   QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) { if (error) console.error(error); });
+
   const upiLink=document.getElementById("upi-link");
-  upiLink.href=upiString; upiLink.setAttribute("target","_blank");
+  upiLink.href=upiString;   // opens UPI app directly
+  upiLink.setAttribute("rel","noopener noreferrer");
+
   openModal('payment-modal');
 }
 
