@@ -313,8 +313,8 @@ function proceedPayment(){
   // 2. Generate unique and valid Transaction Reference (tr) (resolves "technical error")
   const transactionReference = generateTransactionReference();
   
-  // build UPI intent using the adjusted parameters. Note: pn is changed to 'delights' for brevity.
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent('vidhyaharihar')}&mc=0000&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
+  // *** CRITICAL FIX HERE: Using CONFIG.UPI_NAME for the Payee Name (pn) ***
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&mc=0000&tid=${transactionReference}&tr=${transactionReference}&tn=${encodeURIComponent('Order Payment')}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
   
   // generate QR
   document.getElementById('qr-code').innerHTML = ""; // Clear previous QR
