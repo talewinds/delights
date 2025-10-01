@@ -336,20 +336,19 @@ function generateReceipt(){
   let itemsText = cart.map(i => `${i.name} x ${i.qty} = ₹${(i.qty*i.price).toFixed(2)}`).join("; ");
 
   // ✅ Send order to Google Sheet
-  fetch(CONFIG.ORDER_SHEET_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      name: name,
-      phone: phone,
-      date: date,
-      address: address,
-      items: itemsText,
-      total: formattedTotal
-    }),
-    headers: { "Content-Type": "application/json" }
-  }).then(res => res.json())
-    .then(resp => console.log("Order sent to Sheet:", resp))
-    .catch(err => console.error("Failed to send order:", err));
+  // ✅ Send order to Google Sheet via GET request
+const url = "https://script.google.com/macros/s/AKfycbzzzaHRIU_agcxU1tiVz6sO5LuJzfUYVcgvX6i4A_ZPTKPDZV_zFVhx7SLngXC7OSxmwg/exec" +
+  `?name=${encodeURIComponent(name)}` +
+  `&phone=${encodeURIComponent(phone)}` +
+  `&date=${encodeURIComponent(date)}` +
+  `&address=${encodeURIComponent(address)}` +
+  `&items=${encodeURIComponent(itemsText)}` +
+  `&total=${encodeURIComponent(formattedTotal)}`;
+
+fetch(url)
+  .then(res => res.json())
+  .then(resp => console.log("Order sent to Sheet:", resp))
+  .catch(err => console.error("Failed to send order:", err));
 
   // --- existing receipt code ---
   let receiptHTML = `<p><strong>Name:</strong> ${name}</p>`;
