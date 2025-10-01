@@ -406,12 +406,14 @@ function shareOrder(){
 
 // Social sharing
 function shareWA(){
-  const url = encodeURIComponent(window.location.href);
-  window.open("https://wa.me/?text=Check%20out%20this%20menu:%20" + url, "_blank");
+  const pageUrl = encodeURIComponent(window.location.href);
+  const message = encodeURIComponent("Check out this menu: ") + pageUrl;
+  window.open("https://wa.me/?text=" + message, "_blank");
 }
+  
 function shareFB(){
-  const url = encodeURIComponent(window.location.href);
-  window.open("https://www.facebook.com/sharer/sharer.php?u=" + url, "_blank");
+  const pageUrl = encodeURIComponent(window.location.href);
+  window.open("https://www.facebook.com/sharer/sharer.php?u=" + pageUrl, "_blank");
 }
 
 // Modal helpers
