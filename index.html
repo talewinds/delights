@@ -92,7 +92,7 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
 <section id="products" class="products">
   <!-- Example hardcoded product cards -->
   <div class="card">
-    <img src="https://raw.githubusercontent.com/YOURUSERNAME/YOURREPO/main/images/laddu.jpg" alt="Laddu">
+    <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/laddu.jpg" alt="laddu">
     <div class="card-content">
       <h3>Laddu</h3>
       <p>Sweet and soft laddus made from premium ingredients.</p>
@@ -108,7 +108,7 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
   </div>
 
   <div class="card">
-    <img src="https://raw.githubusercontent.com/YOURUSERNAME/YOURREPO/main/images/mixture.jpg" alt="Mixture">
+    <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/mixture.jpg" alt="mixture">
     <div class="card-content">
       <h3>Mixture</h3>
       <p>Crispy, savory mixture perfect for snacks.</p>
@@ -118,10 +118,58 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
       </div>
       <div class="product-actions">
         <input type="number" min="1" value="1" class="quantity-input">
-        <button class="btn" onclick="addToCart('Mixture', 40, parseInt(this.previousElementSibling.value))">Add</button>
+        <button class="btn" onclick="addToCart('mixture', 40, parseInt(this.previousElementSibling.value))">Add</button>
       </div>
     </div>
   </div>
+
+  <div class="card">
+  <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/mysorepak.jpg" alt="mysorepak">
+  <div class="card-content">
+    <h3>Mysorepak</h3>
+    <p>Sweet Mysorepak which just vanishes in your mouth.</p>
+    <div class="price-row">
+      <span class="price">₹50</span>
+      <span class="added-msg"></span>
+    </div>
+    <div class="product-actions">
+      <input type="number" min="1" value="1" class="quantity-input">
+      <button class="btn" onclick="addToCart('mysorepak', 50, parseInt(this.previousElementSibling.value))">Add</button>
+    </div>
+  </div>
+</div>
+
+  <div class="card">
+  <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/jilebi.jpg" alt="jilebi">
+  <div class="card-content">
+    <h3>Jilebi</h3>
+    <p>Sweet jilebis made from premium ingredients.</p>
+    <div class="price-row">
+      <span class="price">₹50</span>
+      <span class="added-msg"></span>
+    </div>
+    <div class="product-actions">
+      <input type="number" min="1" value="1" class="quantity-input">
+      <button class="btn" onclick="addToCart('jilebi', 50, parseInt(this.previousElementSibling.value))">Add</button>
+    </div>
+  </div>
+</div>
+
+  <div class="card">
+  <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/pakoda.jpg" alt="pakoda">
+  <div class="card-content">
+    <h3>Pakoda</h3>
+    <p>crispy and hot pakodas which is irresistible.</p>
+    <div class="price-row">
+      <span class="price">₹50</span>
+      <span class="added-msg"></span>
+    </div>
+    <div class="product-actions">
+      <input type="number" min="1" value="1" class="quantity-input">
+      <button class="btn" onclick="addToCart('pakoda', 50, parseInt(this.previousElementSibling.value))">Add</button>
+    </div>
+  </div>
+</div>
 
   <!-- Add more products here in the same format -->
 </section>
