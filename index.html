@@ -94,15 +94,15 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
   <div class="card">
     <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/laddu.jpg" alt="laddu">
     <div class="card-content">
-      <h3>Laddu</h3>
+      <h3>laddu</h3>
       <p>Sweet and soft laddus made from premium ingredients.</p>
       <div class="price-row">
-        <span class="price">₹50</span>
+        <span class="price">₹50 / 5 units</span>
         <span class="added-msg"></span>
       </div>
       <div class="product-actions">
         <input type="number" min="1" value="1" class="quantity-input">
-        <button class="btn" onclick="addToCart('Laddu', 50, parseInt(this.previousElementSibling.value))">Add</button>
+        <button class="btn" onclick="addToCart('laddu', 50, parseInt(this.previousElementSibling.value))">Add</button>
       </div>
     </div>
   </div>
@@ -110,10 +110,10 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
   <div class="card">
     <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/mixture.jpg" alt="mixture">
     <div class="card-content">
-      <h3>Mixture</h3>
+      <h3>mixture</h3>
       <p>Crispy, savory mixture perfect for snacks.</p>
       <div class="price-row">
-        <span class="price">₹40</span>
+        <span class="price">₹40 / 100g</span>
         <span class="added-msg"></span>
       </div>
       <div class="product-actions">
@@ -126,10 +126,10 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
   <div class="card">
   <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/mysorepak.jpg" alt="mysorepak">
   <div class="card-content">
-    <h3>Mysorepak</h3>
-    <p>Sweet Mysorepak which just vanishes in your mouth.</p>
+    <h3>mysorepak</h3>
+    <p>Royal sweet mysorepak which just vanishes in your mouth.</p>
     <div class="price-row">
-      <span class="price">₹50</span>
+      <span class="price">₹50 / 5 units</span>
       <span class="added-msg"></span>
     </div>
     <div class="product-actions">
@@ -142,10 +142,10 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
   <div class="card">
   <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/jilebi.jpg" alt="jilebi">
   <div class="card-content">
-    <h3>Jilebi</h3>
-    <p>Sweet jilebis made from premium ingredients.</p>
+    <h3>jilebi</h3>
+    <p>Golden, crispy, and juicy jilebis.</p>
     <div class="price-row">
-      <span class="price">₹50</span>
+      <span class="price">₹50 / 5 units</span>
       <span class="added-msg"></span>
     </div>
     <div class="product-actions">
@@ -158,10 +158,10 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
   <div class="card">
   <img src="https://raw.githubusercontent.com/talewinds/delights/refs/heads/main/images/pakoda.jpg" alt="pakoda">
   <div class="card-content">
-    <h3>Pakoda</h3>
-    <p>crispy and hot pakodas which is irresistible.</p>
+    <h3>pakoda</h3>
+    <p>Hot and crunchy onion pakodas which is irresistible.</p>
     <div class="price-row">
-      <span class="price">₹50</span>
+      <span class="price">₹50 / 100g</span>
       <span class="added-msg"></span>
     </div>
     <div class="product-actions">
@@ -185,9 +185,9 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
   <h2>Checkout</h2>
   <form id="checkout-form">
     <label>Name <input type="text" id="cust-name" required></label>
-    <label>Phone <input type="text" id="cust-phone" required></label>
+    <label>Phone <input type="tel" id="cust-phone" required pattern="[0-9]{10}" required></label>
     <label>Delivery Date <input type="date" id="cust-date" required></label>
-    <label>Address <textarea id="cust-address"></textarea></label>
+    <label>Address <textarea id="cust-address" rows="3"></textarea></label>
     <button type="submit" class="btn">Confirm Order</button>
   </form>
 </section>
@@ -217,7 +217,7 @@ input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc
     <p>Total Amount: ₹<span id="payment-amount"></span></p>
     <a id="upi-link" class="btn" style="display:block;text-align:center;margin-top:10px;">Pay via GPay / UPI App</a>
     <p class="upi-fallback">Or pay manually using UPI ID: <span id="upi-text" style="font-weight:700"></span></p>
-    <button class="btn" onclick="generateReceipt()" style="margin-top:10px;">I've Paid, Create Order and share to Whatsapp</button>
+    <button class="btn" onclick="generateReceipt()" style="margin-top:10px;">Click here to place Order. Payment assumed to be completed via UPI/GPay. We will confirm your payment shortly."</button>
   </div>
 </div>
 
@@ -354,7 +354,7 @@ function generateReceipt(){
   let itemsText = cart.map(i => `${i.name} x ${i.qty} = ₹${(i.qty*i.price).toFixed(2)}`).join("; ");
 
   // Send order to Google Sheet
-  const url = "https://script.google.com/macros/s/YOUR_ORDER_SCRIPT_ID/exec" +
+  const url = "https://script.google.com/macros/s/AKfycbzzzaHRIU_agcxU1tiVz6sO5LuJzfUYVcgvX6i4A_ZPTKPDZV_zFVhx7SLngXC7OSxmwg/exec" +
     `?name=${encodeURIComponent(name)}` +
     `&phone=${encodeURIComponent(phone)}` +
     `&date=${encodeURIComponent(date)}` +
