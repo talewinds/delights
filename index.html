@@ -21,54 +21,50 @@
   border-bottom: 1px solid #eee;
 }
 
-  /* Fixed Cart Icon */
-  #cart-icon { position:fixed; top:15px; right:15px; width:40px; height:40px; cursor:pointer; z-index:1000; }
-  #cart-icon svg { width:100%; height:100%; fill:#28a745; }
-  .cart-badge { position:absolute; top:-8px; right:-8px; background:gold; color:black; font-weight:bold; padding:4px 8px; border-radius:50%; font-size:14px; pointer-events:none; }
+/* Fixed Cart Icon */
+#cart-icon { position:fixed; top:15px; right:15px; width:40px; height:40px; cursor:pointer; z-index:1000; }
+#cart-icon svg { width:100%; height:100%; fill:#28a745; }
+.cart-badge { position:absolute; top:-8px; right:-8px; background:gold; color:black; font-weight:bold; padding:4px 8px; border-radius:50%; font-size:14px; pointer-events:none; }
 
-  /* Products Grid */
-  .products { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:15px; padding:20px; }
-  .card { border:1px solid #ddd; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; }
-  .card img { width:100%; height:150px; object-fit:cover; background:#eee; }
-  .card-content { padding:10px; }
-  .card h3 { margin:5px 0; color:maroon; }
-  .price-row { display:flex; align-items:center; justify-content:space-between; }
-  .price { font-weight:bold; margin:5px 0; }
-  .added-msg { color:green; font-size:14px; font-weight:bold; margin-left:10px; white-space:nowrap; }
+/* Products Grid */
+.products { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:15px; padding:20px; }
+.card { border:1px solid #ddd; border-radius:8px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; }
+.card img { width:100%; height:150px; object-fit:cover; background:#eee; }
+.card-content { padding:10px; }
+.card h3 { margin:5px 0; color:maroon; }
+.price-row { display:flex; align-items:center; justify-content:space-between; }
+.price { font-weight:bold; margin:5px 0; }
+.added-msg { color:green; font-size:14px; font-weight:bold; margin-left:10px; white-space:nowrap; }
 
-  .product-actions { display:flex; align-items:center; margin-top:5px; }
-  .quantity-input { width:60px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align:center; margin-right:8px; }
-  .btn { background:maroon; color:white; border:none; padding:6px 12px; cursor:pointer; border-radius:4px; }
-  .btn:hover { background:#a00000; }
+.product-actions { display:flex; align-items:center; margin-top:5px; }
+.quantity-input { width:60px; padding:5px; border:1px solid #ccc; border-radius:4px; text-align:center; margin-right:8px; }
+.btn { background:maroon; color:white; border:none; padding:6px 12px; cursor:pointer; border-radius:4px; }
+.btn:hover { background:#a00000; }
 
-  /* Cart & Checkout */
-  #cart { padding:20px; background:linear-gradient(135deg,#fff5f5,#ffe6e6,#fffaf4); }
-  #cart h2 { color:maroon; }
-  .cart-item { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding:8px 0; }
-  .cart-item input { width:50px; text-align:center; }
-  #checkout { padding:20px; }
-  #checkout h2 { color:maroon; }
-  label { display:block; margin-top:10px; }
-  input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; }
+/* Cart & Checkout */
+#cart { padding:20px; background:linear-gradient(135deg,#fff5f5,#ffe6e6,#fffaf4); }
+#cart h2 { color:maroon; }
+.cart-item { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding:8px 0; }
+.cart-item input { width:50px; text-align:center; }
+#checkout { padding:20px; }
+#checkout h2 { color:maroon; }
+label { display:block; margin-top:10px; }
+input, textarea { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; }
 
-  .share { margin:20px; text-align:center; }
-  .share button { margin:5px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; color:white; }
-  .wa { background:#25D366; }
-  .fb { background:#4267B2; }
+.share { margin:20px; text-align:center; }
+.share button { margin:5px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; color:white; }
+.wa { background:#25D366; }
+.fb { background:#4267B2; }
 
-  /* Skeleton loading */
-  .skeleton { background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-
-  /* Modal */
-  .modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); }
-  .modal-content { background:#fff; margin:10% auto; padding:20px; border-radius:8px; width:90%; max-width:500px; }
-  .modal h3 { margin-top:0; color:maroon; }
-  .close { color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer; }
-  .close:hover { color:black; }
-  #qr-code { text-align:center; margin:15px 0; }
-  #receipt { background:#fffafa; padding:10px; border:1px solid #ddd; border-radius:6px; }
-  .upi-fallback { text-align:center; margin-top:8px; font-weight:600; }
+/* Modal */
+.modal { display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); }
+.modal-content { background:#fff; margin:10% auto; padding:20px; border-radius:8px; width:90%; max-width:500px; }
+.modal h3 { margin-top:0; color:maroon; }
+.close { color:#aaa; float:right; font-size:28px; font-weight:bold; cursor:pointer; }
+.close:hover { color:black; }
+#qr-code { text-align:center; margin:15px 0; }
+#receipt { background:#fffafa; padding:10px; border:1px solid #ddd; border-radius:6px; }
+.upi-fallback { text-align:center; margin-top:8px; font-weight:600; }
 </style>
 </head>
 
@@ -77,7 +73,7 @@
   <h1>delights</h1>
   <p>Made fresh on order – home made - Taste of Tradition</p>
 </header>
-  <section id="intro" class="intro">
+<section id="intro" class="intro">
   <p>Welcome to <strong>delights</strong> — your one-stop destination for homemade sweets and snacks. 
   Every item is prepared fresh on order with authentic ingredients, ensuring the taste of tradition and 
   delivered to your doorstep.</p>
@@ -94,7 +90,40 @@
 </div>
 
 <section id="products" class="products">
-  <div class="card skeleton"><div style="height:150px;"></div><div class="card-content"><h3 style="height:20px;width:70%;"></h3><p style="height:15px;width:90%;"></p><p style="height:15px;width:50%;"></p><button class="btn" style="opacity:0"></button></div></div>
+  <!-- Example hardcoded product cards -->
+  <div class="card">
+    <img src="https://raw.githubusercontent.com/YOURUSERNAME/YOURREPO/main/images/laddu.jpg" alt="Laddu">
+    <div class="card-content">
+      <h3>Laddu</h3>
+      <p>Sweet and soft laddus made from premium ingredients.</p>
+      <div class="price-row">
+        <span class="price">₹50</span>
+        <span class="added-msg"></span>
+      </div>
+      <div class="product-actions">
+        <input type="number" min="1" value="1" class="quantity-input">
+        <button class="btn" onclick="addToCart('Laddu', 50, parseInt(this.previousElementSibling.value))">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://raw.githubusercontent.com/YOURUSERNAME/YOURREPO/main/images/mixture.jpg" alt="Mixture">
+    <div class="card-content">
+      <h3>Mixture</h3>
+      <p>Crispy, savory mixture perfect for snacks.</p>
+      <div class="price-row">
+        <span class="price">₹40</span>
+        <span class="added-msg"></span>
+      </div>
+      <div class="product-actions">
+        <input type="number" min="1" value="1" class="quantity-input">
+        <button class="btn" onclick="addToCart('Mixture', 40, parseInt(this.previousElementSibling.value))">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add more products here in the same format -->
 </section>
 
 <section id="cart">
@@ -159,90 +188,19 @@
 const CONFIG = {
   OWNER_PHONE: "919447577561",
   UPI_ID: "lakshman.siyer-3@okaxis",
-  UPI_NAME: "Lakshmanan",
-  SHEET_PRODUCTS_URL: "https://script.google.com/macros/s/AKfycbwJx535jhdv70wneiEj5qZSPqvOHJpP2B-t7hXK0RgaM1K7a_5uAiWz3OL6ETt1rYhwPg/exec",
-ORDER_SHEET_URL: "https://script.google.com/macros/s/AKfycbx2JiQ83S6xHZQg2KKETYT59FVkfQEGx2BPYSgKGF93UZMDEi63XP40-n39C_aSYXwD2A/exec"  // <<< Add this
+  UPI_NAME: "Lakshmanan"
 };
 
-document.getElementById("upi-id").innerText = CONFIG.UPI_ID;
 document.getElementById("upi-text").innerText = CONFIG.UPI_ID;
 
 let cart = [];
-
-// Load products
-function loadProducts() {
-  fetch(CONFIG.SHEET_PRODUCTS_URL)
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("products");
-      container.innerHTML = "";
-      data.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const img = document.createElement("img");
-        img.src = item.image_url || item.image || "https://via.placeholder.com/150";
-        img.alt = item.name;
-
-        const content = document.createElement("div");
-        content.className = "card-content";
-
-        const h3 = document.createElement("h3");
-        h3.innerText = item.name;
-
-        const desc = document.createElement("p");
-        desc.innerText = item.description || item.desc || "";
-
-        const priceRow = document.createElement("div");
-        priceRow.className = "price-row";
-        const price = document.createElement("span");
-        price.className = "price";
-        price.innerText = "₹" + item.price;
-        const addedMsg = document.createElement("span");
-        addedMsg.className = "added-msg";
-        priceRow.appendChild(price);
-        priceRow.appendChild(addedMsg);
-
-        const actions = document.createElement("div");
-        actions.className = "product-actions";
-
-        const qtyInput = document.createElement("input");
-        qtyInput.type = "number";
-        qtyInput.min = "1";
-        qtyInput.value = "1";
-        qtyInput.className = "quantity-input";
-
-        const btn = document.createElement("button");
-        btn.className = "btn";
-        btn.innerText = "Add";
-
-        btn.addEventListener("click", () => {
-          let qty = parseInt(qtyInput.value) || 1;
-          const existed = addToCart(item.name, Number(item.price), qty);
-          addedMsg.innerText = existed ? "Already in cart — edit quantity in cart" : `${qty} units added to cart`;
-        });
-
-        actions.appendChild(qtyInput);
-        actions.appendChild(btn);
-
-        content.appendChild(h3);
-        content.appendChild(desc);
-        content.appendChild(priceRow);
-        content.appendChild(actions);
-
-        card.appendChild(img);
-        card.appendChild(content);
-        container.appendChild(card);
-      });
-    })
-    .catch(err => console.error("Failed to load products:", err));
-}
 
 // Add to cart
 function addToCart(name, price, qty) {
   const existing = cart.find(i => i.name === name);
   if (existing) {
-    return true; // already in cart
+    alert("Item already in cart — edit quantity in cart");
+    return true;
   } else {
     cart.push({name, price, qty});
     renderCart();
@@ -321,10 +279,9 @@ function proceedPayment(){
   closeModal('confirm-modal');
   const totalRaw = document.getElementById("cart-total").innerText || "0";
   const totalFloat = isNaN(parseFloat(totalRaw)) ? 0 : parseFloat(totalRaw);
-  let amountForUpi = Number.isInteger(totalFloat) ? totalFloat.toString() : totalFloat.toFixed(2);
   document.getElementById("payment-amount").innerText = totalFloat.toFixed(2);
 
-  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&am=${encodeURIComponent(amountForUpi)}&cu=INR`;
+  const upiString = `upi://pay?pa=${encodeURIComponent(CONFIG.UPI_ID)}&pn=${encodeURIComponent(CONFIG.UPI_NAME)}&am=${encodeURIComponent(totalFloat.toFixed(2))}&cu=INR`;
   document.getElementById('qr-code').innerHTML = "";
   QRCode.toCanvas(document.getElementById('qr-code'), upiString, function (error) {
     if (error) document.getElementById('qr-code').innerText = "QR generation failed — please use UPI ID below.";
@@ -348,22 +305,20 @@ function generateReceipt(){
 
   let itemsText = cart.map(i => `${i.name} x ${i.qty} = ₹${(i.qty*i.price).toFixed(2)}`).join("; ");
 
-  // ✅ Send order to Google Sheet
-  // ✅ Send order to Google Sheet via GET request
-const url = "https://script.google.com/macros/s/AKfycbzzzaHRIU_agcxU1tiVz6sO5LuJzfUYVcgvX6i4A_ZPTKPDZV_zFVhx7SLngXC7OSxmwg/exec" +
-  `?name=${encodeURIComponent(name)}` +
-  `&phone=${encodeURIComponent(phone)}` +
-  `&date=${encodeURIComponent(date)}` +
-  `&address=${encodeURIComponent(address)}` +
-  `&items=${encodeURIComponent(itemsText)}` +
-  `&total=${encodeURIComponent(formattedTotal)}`;
+  // Send order to Google Sheet
+  const url = "https://script.google.com/macros/s/YOUR_ORDER_SCRIPT_ID/exec" +
+    `?name=${encodeURIComponent(name)}` +
+    `&phone=${encodeURIComponent(phone)}` +
+    `&date=${encodeURIComponent(date)}` +
+    `&address=${encodeURIComponent(address)}` +
+    `&items=${encodeURIComponent(itemsText)}` +
+    `&total=${encodeURIComponent(formattedTotal)}`;
 
-fetch(url)
-  .then(res => res.json())
-  .then(resp => console.log("Order sent to Sheet:", resp))
-  .catch(err => console.error("Failed to send order:", err));
+  fetch(url)
+    .then(res => res.json())
+    .then(resp => console.log("Order sent to Sheet:", resp))
+    .catch(err => console.error("Failed to send order:", err));
 
-  // --- existing receipt code ---
   let receiptHTML = `<p><strong>Name:</strong> ${name}</p>`;
   receiptHTML += `<p><strong>Phone:</strong> ${phone}</p>`;
   receiptHTML += `<p><strong>Delivery Date:</strong> ${date}</p>`;
@@ -380,7 +335,6 @@ fetch(url)
   updateCartBadge();
   document.getElementById("checkout-form").reset();
 }
-
 
 // Share order (WhatsApp)
 function shareOrder(){
@@ -403,8 +357,6 @@ function shareFB(){
 // Modal helpers
 function openModal(id){ document.getElementById(id).style.display="block"; }
 function closeModal(id){ document.getElementById(id).style.display="none"; }
-
-window.onload = loadProducts;
 </script>
 </body>
 </html>
