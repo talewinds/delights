@@ -246,6 +246,11 @@ let cart = [];
 // Add to cart
 function addToCart(name, price, qty) {
   const existing = cart.find(i => i.name === name);
+  const card = Array.from(document.querySelectorAll(".card")).find(c => 
+    c.querySelector("h3").innerText === name
+  );
+  const msgSpan = card ? card.querySelector(".added-msg") : null;
+
   if (existing) {
     alert("Item already in cart — edit quantity in cart");
     return true;
@@ -253,9 +258,16 @@ function addToCart(name, price, qty) {
     cart.push({name, price, qty});
     renderCart();
     updateCartBadge();
+
+    // ✅ Show green message
+    if (msgSpan) {
+      msgSpan.innerText = `${qty} added to cart`;
+    }
+
     return false;
   }
 }
+
 
 // Render cart
 function renderCart() {
